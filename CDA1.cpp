@@ -6,10 +6,33 @@
  *  Date: 7 February 2021
  *  Course: CS 201
  * 
- *  Function: 
+ *  Function: Implement a Circular Dynamic Array Class using C++ Templates.
  * 
- *  Description: 
+ *  Description: The Circular Dynamic Array is implemented as a C++ Template
+ *          that can take in unknown parameter types represented by "elmtype."
+ *          The class name is CDA and consists of a default constructor, constructor 
+ *          with one parameter s, copy constructor, destructor, and copy 
+ *          assignment constructor. The CDA class is programmed such that it 
+ *          includes proper memory management.
  * 
+ *          The CDA has an overloaded operator for the open and closed brackets []
+ *          so that the user can manipulate data at the specified index inside the 
+ *          brackets. 
+ * 
+ *          The User can add elements to the CDA with AddEnd() and AddFront() functions.
+ *          The User can also delete elements from the back and front of the CDA with
+ *          DelEnd() and DelFront(), respectively.
+ *          
+ *          There are also functions for returning the size and capacity of the CDA.
+ *          Length() returns the current size (used elements) of the CDA and 
+ *          Capacity() returns the capacity (allotted space for elements).
+ * 
+ *          The Clear() function frees any space currently used and starts over 
+ *          with an array of size 0 and capacity 4.
+ *          
+ *          The Reverse() function changes the logical direction of the array.
+ * 
+ *          TO DO: FINISH DESCRIPTION..............
  *  
  * 
  * 
@@ -43,7 +66,7 @@ template <class elmtype> class CDA {
 
         //void Clear();                 // TO DO:
         //void Reverse();               // TO DO:
-        elmtype Select(int k);          // TO DO:
+        //elmtype Select(int k);        // TO DO:
         //void Sort();                  // TO DO:
         //int Search(elmtype e);        // TO DO:
         //int BinSearch(elmtype e);     // TO DO:
@@ -55,7 +78,8 @@ template <class elmtype> class CDA {
     private:
         int size;
         int capacity;
-        bool ordered;
+        bool ordered;       // TRUE = Ordered, FALSE = Unordered
+        bool reversed;      //          // TO DO:
         int front = 0;      // Index of front element of array (element is not available)
         int back;           // Index of next available space at the back of array
         elmtype *array;     // Pointer to array data
@@ -148,7 +172,8 @@ template <class elmtype> int CDA<elmtype>::Length() { return size; }
 template <class elmtype> int CDA<elmtype>::Capacity() { return capacity; }
 
 // Select Function, returns the element at index k
-template <class elmtype> elmtype CDA<elmtype>::Select(int k) { return array[(k+front)%capacity]; }
+// TO DO: Redo so that it performs a quickselect to get smallest element k. (Not meant to access the kth element.)
+//template <class elmtype> elmtype CDA<elmtype>::Select(int k) { return array[(k+front)%capacity]; }
 
 // Capacity Check 
 template <class elmtype> void CDA<elmtype>::CapacityCheck() {
