@@ -26,11 +26,11 @@ template <class elmtype> class CDA {
     public:
         CDA();                      // Default Constructor
         CDA(int s);                 // Constructor
-        CDA(CDA<elmtype>&);         // Copy Constructor     // TO DO:
-        ~CDA();                     // Destructor           // TO DO:
+        CDA(CDA<elmtype>&);         // Copy Constructor    
+        ~CDA();                     // Destructor
         
         CDA& operator=(const CDA& v);   // Copy Assignment Operator // TO DO:
-        //elmtype& operator[](int i);
+        //elmtype& operator[](int i);       // TO DO:
 
         // Add and Delete Operations for CDA
         void AddEnd(elmtype v);
@@ -43,7 +43,7 @@ template <class elmtype> class CDA {
 
         //void Clear();                 // TO DO:
         //void Reverse();               // TO DO:
-        elmtype Select(int k);
+        elmtype Select(int k);          // TO DO:
         //void Sort();                  // TO DO:
         //int Search(elmtype e);        // TO DO:
         //int BinSearch(elmtype e);     // TO DO:
@@ -51,24 +51,31 @@ template <class elmtype> class CDA {
         bool GetOrdered();
         int GetFront();
         int GetEnd();
-        void PrintArray();
+        void PrintArray();        
     private:
         int size;
         int capacity;
         bool ordered;
         int front = 0;      // Index of front element of array (element is not available)
         int back;           // Index of next available space at the back of array
-        elmtype array[];
-        void CapacityCheck();
-        void ResizeUp();            // TO DO:
-        void ResizeDown();          // TO DO:
+        elmtype *array;     // Pointer to array data
+
+        void CapacityCheck();       // Triggers ResizeUp() or ResizeDown()
+        void ResizeUp();            // Double CDA capacity when CDA is full
+        void ResizeDown();          // Halve CDA capacity when size is 25% of capacity  // TO DO:
+        void Copy(const CDA<elmtype>& v);    
+        void CopyArray(elmtype array1[], elmtype array2[], int front, int capacity);
 };
 
 // Default Constructor 
-template <class elmtype> CDA<elmtype>::CDA(): size(0), capacity(1), ordered(false), back(0) {}
+template <class elmtype> CDA<elmtype>::CDA(): size(0), capacity(1), ordered(false), back(0) {
+    array = new elmtype[capacity];
+}
 
 // Constructor for specified Size/Capacity
-template <class elmtype> CDA<elmtype>::CDA(int s): size(s), capacity(s), ordered(false), back(s) {}
+template <class elmtype> CDA<elmtype>::CDA(int s): size(s), capacity(s), ordered(false), back(s) {
+    array = new elmtype[capacity];
+}
 
 // Copy Constructor
 // TO DO: Figure out why this works. Also why do i need 2 loops?????
@@ -76,30 +83,15 @@ template <class elmtype> CDA<elmtype>::CDA(CDA<elmtype>& v): size(v.Length()), c
     back = size;
     front = 0;
 
-    elmtype * arr = new elmtype[capacity];
+    array = new elmtype[capacity];
 
-    // Copy old array to temp array
-    for (int i=0; i<size; i++) {
-        arr[i] = v.Select((i+1+v.GetFront())%capacity);
-    }
-    
-    // Copy temp array to final array
-    for (int i=0; i<size; i++) {
-        this->array[i]=arr[i];
-    }
-
-    // Free memory
-    delete[] arr;
+    Copy(v);        // Copy elements from CDA v's array to current array
 }
 
 // Destructor for CDA Class
-// TO DO: not deleting correctly. Failing main.cpp tests. ------------------------------------------
 template <class elmtype> CDA<elmtype>::~CDA() { 
-    // cout << "Deleting class..." << endl;
-    delete[] &size;
-    delete[] &capacity;
-    delete[] &front;
-    delete[] &back;
+    cout << "Deleting class..." << endl;
+    delete[] array;     // Free the memory space
 }
 
 // Copy Assignment Constructor
@@ -155,35 +147,35 @@ template <class elmtype> void CDA<elmtype>::CapacityCheck() {
 }
 
 // Resize Array Up (Double capacity when size == capacity)
-// TO DO: Figure out how to assign same variables to a new array ------------------------------------
 template <class elmtype> void CDA<elmtype>::ResizeUp() {
-    // Double new array capacity
-    capacity = capacity*2;
+    elmtype *temp;  // New pointer for storing array data
+    temp = array;   // Store current array in temp before resizing capacity
+    capacity = capacity*2;      // Double new array capacity
     
-    // Figure out why this works vvv -----------------------------------------------------------------
-    // Maybe make a function out of this called NewArray
-    // Also used this exact block of code for Copy Constructor. 
+    array = new elmtype[capacity];      // Declare new array with new capacity
 
-    elmtype * arr = new elmtype[capacity];
+    CopyArray(array, temp, front, (capacity/2));        // Copy elements from temp into array
 
-    // Copy old array to temp array
-    for (int i=0; i<size; i++) {
-        arr[i] = Select((i+GetFront())%capacity);
-    }
-    
-    // Copy temp array to final array
-    for (int i=0; i<size; i++) {
-        this->array[i]=arr[i];
-    }
-
-    // Free memory
-    delete[] arr;
-    // End of potential new function called NewArray -------------------------------------------------
+    delete[] temp;  // Free up memory
 }
 
 // Resize Array Down (Decrease capacity by half when size is 25% of capacity)
 // TO DO: ------------------------------------------------------------------------------------
 template <class elmtype> void CDA<elmtype>::ResizeDown() {}
+
+// Copy Function - copies elements from referenced CDA v to current CDA array
+template <class elmtype> void CDA<elmtype>::Copy(const CDA<elmtype>& v) {
+    for (int i=0; i<size; i++) {
+        array[i]=v.array[(i+front)%capacity]; 
+    }
+}
+
+// Copy Array Function - copies elements from array2 into array1
+template <class elmtype> void CDA<elmtype>::CopyArray(elmtype array1[], elmtype array2[], int front, int capacity) {
+    for (int i=0; i<size; i++) {
+        array1[i]=array2[(i+front)%capacity]; 
+    }
+}
 
 // Get the bool for if array is ordered or not (TRUE = Ordered)
 template <class elmtype> bool CDA<elmtype>::GetOrdered() {
@@ -201,11 +193,12 @@ template <class elmtype> int CDA<elmtype>::GetEnd() {
     return back;
 }
 
+
 // Prints the Dynamic Array the way the User should see it (front to back of used elements)
 template <class elmtype> void CDA<elmtype>::PrintArray() {
     cout << "Printing array..." << endl;
     for(int i=0; i<size; i++) {
-        cout << i << ":" << array[(front+i)%capacity] << " "; // front is index of first element
+        cout << array[(front+i)%capacity] << " "; // front is index of first element
     }
     cout << "Done Printing." << endl;
 }

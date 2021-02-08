@@ -2,8 +2,9 @@
 using namespace std;
 #include "CDA1.cpp"
 
-int main() {
-    /*
+void ConstructorTests() {
+    cout << "-------------- Beginning Constructor Tests ---------------" << endl << endl;
+    
     // Test Default Constructor
     CDA<int> A;
     cout << "Creating new CDA A..." << endl << endl;
@@ -17,6 +18,26 @@ int main() {
     cout << "The size of B is: " << B.Length() << endl;
     cout << "The capacity of B is: " << B.Capacity() << endl;
     B.PrintArray();
+
+    // Test Copy Constructor
+    cout << "Testing Copy Constructor..." << endl << "C = B <-- Making a copy of B" << endl;
+    CDA<int> C = B;
+    cout << "The size of C is: " << C.Length() << endl;
+    cout << "The capacity of C is: " << C.Capacity() << endl;
+    C.PrintArray();
+
+    cout << endl << "----------- Done with Constructor tests -------------------" << endl << endl;
+}
+
+int main() {
+    ConstructorTests();
+
+    // SETUP
+    cout << "Creating CDA B(10)..." << endl;
+    CDA<int> B(10);
+    B.PrintArray();
+    cout << "The size of B is: " << B.Length() << endl;
+    cout << "The capacity of B is: " << B.Capacity() << endl;
 
     // Test AddEnd(10)
     cout << endl << "Adding 10 to back of array B..." << endl;
@@ -41,9 +62,9 @@ int main() {
 
     // End of Tests
     cout << endl << "----- End of tests -----" << endl << endl;
-    */
-
     
+
+    /*
     // Test Default Constructor
     CDA<int> A;
     int sizeA = A.Length();
