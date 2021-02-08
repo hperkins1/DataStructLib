@@ -78,15 +78,18 @@ template <class elmtype> CDA<elmtype>::CDA(CDA<elmtype>& v): size(v.Length()), c
 
     elmtype * arr = new elmtype[capacity];
 
-    // Copy old array to new one
+    // Copy old array to temp array
     for (int i=0; i<size; i++) {
         arr[i] = v.Select((i+1+v.GetFront())%capacity);
     }
     
-    // Memory management
+    // Copy temp array to final array
     for (int i=0; i<size; i++) {
         this->array[i]=arr[i];
     }
+
+    // Free memory
+    delete[] arr;
 }
 
 // Destructor for CDA Class
@@ -163,15 +166,18 @@ template <class elmtype> void CDA<elmtype>::ResizeUp() {
 
     elmtype * arr = new elmtype[capacity];
 
-    // Copy old array to new one
+    // Copy old array to temp array
     for (int i=0; i<size; i++) {
-        arr[i] = Select((i+1+GetFront())%capacity);
+        arr[i] = Select((i+GetFront())%capacity);
     }
     
-    // Memory management
+    // Copy temp array to final array
     for (int i=0; i<size; i++) {
         this->array[i]=arr[i];
     }
+
+    // Free memory
+    delete[] arr;
     // End of potential new function called NewArray -------------------------------------------------
 }
 
