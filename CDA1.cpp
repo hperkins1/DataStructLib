@@ -29,7 +29,7 @@ template <class elmtype> class CDA {
         CDA(CDA<elmtype>&);         // Copy Constructor    
         ~CDA();                     // Destructor
         
-        CDA& operator=(const CDA& v);   // Copy Assignment Operator // TO DO:
+        CDA<elmtype>& operator=(const CDA<elmtype>& v);   // Copy Assignment Operator 
         //elmtype& operator[](int i);       // TO DO:
 
         // Add and Delete Operations for CDA
@@ -94,9 +94,19 @@ template <class elmtype> CDA<elmtype>::~CDA() {
     delete[] array;     // Free the memory space
 }
 
-// Copy Assignment Constructor
-// TO DO: ----------------------------------------------------------------------------------------
-
+// Copy Assignment Operator
+template <class elmtype> CDA<elmtype>& CDA<elmtype>::operator=(const CDA& v) {
+    // If array pointers point to same data, then skip the if statement because they are already equal
+    if(array != v.array) {
+        size = v.Length();
+        capacity = v.Capacity();
+        ordered = v.GetOrdered();
+        back = size;
+        front = 0;
+        CopyArray(array, v.array, v.GetFront(), capacity);  // Make sure to use front from array you are copying from
+    }
+    return *this;
+}
 
 // AddEnd Function adds new element to end of array
 template <class elmtype> void CDA<elmtype>::AddEnd(elmtype v) {

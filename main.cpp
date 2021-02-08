@@ -29,8 +29,8 @@ void ConstructorTests() {
     cout << endl << "----------- Done with Constructor tests -------------------" << endl << endl;
 }
 
-int main() {
-    ConstructorTests();
+void AddEndTests() {
+    cout << "-------------- Beginning AddEnd() Tests ---------------" << endl << endl;
 
     // SETUP
     cout << "Creating CDA B(10)..." << endl;
@@ -61,8 +61,30 @@ int main() {
     cout << "The capacity of B is: " << B.Capacity() << endl;
 
     // End of Tests
-    cout << endl << "----- End of tests -----" << endl << endl;
+    cout << endl << "----- End of AddEnd() tests -----" << endl << endl;
+}
+
+int main() {
+    ConstructorTests();
+    AddEndTests();
     
+    // SETUP
+    cout << "Creating CDA B(10)..." << endl;
+    CDA<int> B(10);
+    B.PrintArray();
+    cout << "The size of B is: " << B.Length() << endl;
+    cout << "The capacity of B is: " << B.Capacity() << endl;
+
+    // Test Copy Assignment Operator
+    cout << "Creating CDA D = B..." << endl;
+    CDA<int> D = B;
+    D.PrintArray();
+    cout << "The size of D is: " << D.Length() << endl;
+    cout << "The capacity of D is: " << D.Capacity() << endl;
+
+
+    // End of Tests
+    cout << endl << "----- End of tests -----" << endl << endl;
 
     /*
     // Test Default Constructor
