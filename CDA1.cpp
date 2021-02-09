@@ -56,7 +56,7 @@ template <class elmtype> class CDA {
         elmtype& operator[](int i);       // Overloaded Brackets Operator
 
         // Add and Delete Operations for CDA
-        void AddEnd(elmtype v);
+        void AddEnd(elmtype v);             // TO DO: Make sure Reverse works with these
         void AddFront(elmtype v);
         void DelEnd();
         void DelFront();
@@ -64,14 +64,15 @@ template <class elmtype> class CDA {
         int Length();       // returns size
         int Capacity();     // returns capacity
 
-        void Clear();                 // TO DO:
-        //void Reverse();               // TO DO:
+        void Clear();
+        void Reverse();               // TO DO:
         //elmtype Select(int k);        // TO DO:
         //void Sort();                  // TO DO:
         //int Search(elmtype e);        // TO DO:
         //int BinSearch(elmtype e);     // TO DO:
 
         bool GetOrdered();
+        bool GetReversed();
         int GetFront();
         int GetEnd();
         void PrintArray();        
@@ -87,23 +88,23 @@ template <class elmtype> class CDA {
         void CapacityCheck();       // Triggers ResizeUp() or ResizeDown()
         void ResizeUp();            // Double CDA capacity when CDA is full
         void ResizeDown();          // Halve CDA capacity when size is 25% of capacity  // TO DO:
-        void Copy(const CDA<elmtype>& v);    
-        void CopyArray(elmtype array1[], elmtype array2[], int front, int capacity);
+        void Copy(const CDA<elmtype>& v);    // TO DO: Make sure Reverse works with copy
+        void CopyArray(elmtype array1[], elmtype array2[], int front, int capacity, bool reversed); // TO DO: Reverse flag
 };
 
 // Default Constructor 
-template <class elmtype> CDA<elmtype>::CDA(): size(0), capacity(1), ordered(false), back(0) {
+template <class elmtype> CDA<elmtype>::CDA(): size(0), capacity(1), ordered(false), reversed(false), back(0) {
     array = new elmtype[capacity];
 }
 
 // Constructor for specified Size/Capacity
-template <class elmtype> CDA<elmtype>::CDA(int s): size(s), capacity(s), ordered(false), back(s) {
+template <class elmtype> CDA<elmtype>::CDA(int s): size(s), capacity(s), ordered(false), reversed(false), back(s) {
     array = new elmtype[capacity];
 }
 
 // Copy Constructor
 // TO DO: Figure out why this works. Also why do i need 2 loops?????
-template <class elmtype> CDA<elmtype>::CDA(CDA<elmtype>& v): size(v.Length()), capacity(v.Capacity()), ordered(v.GetOrdered()) {
+template <class elmtype> CDA<elmtype>::CDA(CDA<elmtype>& v): size(v.Length()), capacity(v.Capacity()), ordered(v.GetOrdered()), reversed(v.GetReversed()) {
     back = size;
     front = 0;
 
@@ -125,9 +126,10 @@ template <class elmtype> CDA<elmtype>& CDA<elmtype>::operator=(const CDA& v) {
         size = v.Length();
         capacity = v.Capacity();
         ordered = v.GetOrdered();
+        reversed = false;
         back = size;
         front = 0;
-        CopyArray(array, v.array, v.GetFront(), capacity);  // Make sure to use front from array you are copying from
+        CopyArray(array, v.array, v.GetFront(), capacity, v.GetReversed());  // Make sure to use front from array you are copying from
     }
     return *this;
 }
@@ -190,6 +192,9 @@ template <class elmtype> void CDA<elmtype>::Clear() {
     array = new elmtype[capacity];
 }
 
+// Reverse Function
+template <class elmtype> void CDA<elmtype>::Reverse() { reversed = true; }
+
 // Select Function, returns the element at index k
 // TO DO: Redo so that it performs a quickselect to get smallest element k. (Not meant to access the kth element.)
 //template <class elmtype> elmtype CDA<elmtype>::Select(int k) { return array[(k+front)%capacity]; }
@@ -208,7 +213,7 @@ template <class elmtype> void CDA<elmtype>::ResizeUp() {
     
     array = new elmtype[capacity];      // Declare new array with new capacity
 
-    CopyArray(array, temp, front, (capacity/2));        // Copy elements from temp into array
+    CopyArray(array, temp, front, (capacity/2), reversed);        // Copy elements from temp into array
 
     delete[] temp;  // Free up memory
 }
@@ -219,13 +224,28 @@ template <class elmtype> void CDA<elmtype>::ResizeDown() {}
 
 // Copy Function - copies elements from referenced CDA v to current CDA array
 template <class elmtype> void CDA<elmtype>::Copy(const CDA<elmtype>& v) {
+    // Check for v's Reverse Flag and copy array in reverse order if true
+    /*if(v.GetReversed()) {
+        for (int i=size; i>0; i--) {
+            array[size-i] = v.array[(i+back)%capacity];
+        }
+    }*/
+    
     for (int i=0; i<size; i++) {
         array[i]=v.array[(i+front)%capacity]; 
     }
 }
 
 // Copy Array Function - copies elements from array2 into array1
-template <class elmtype> void CDA<elmtype>::CopyArray(elmtype array1[], elmtype array2[], int front, int capacity) {
+template <class elmtype> void CDA<elmtype>::CopyArray(elmtype array1[], elmtype array2[], int front, int capacity, bool reversed) {
+    // Check for array2's reverse flag and copy array in reverse order if true
+    /*if(reversed) {
+        for (int i=size; i>0; i--) {
+            array1[size-i] = 
+        }
+    }*/
+
+
     for (int i=0; i<size; i++) {
         array1[i]=array2[(i+front)%capacity]; 
     }
@@ -234,6 +254,11 @@ template <class elmtype> void CDA<elmtype>::CopyArray(elmtype array1[], elmtype 
 // Get the bool for if array is ordered or not (TRUE = Ordered)
 template <class elmtype> bool CDA<elmtype>::GetOrdered() {
     return ordered;
+}
+
+// Get the bool for if array order is reversed or not (TRUE = Reveresed)
+template <class elmtype> bool CDA<elmtype>::GetReversed() {
+    return reversed;
 }
 
 // Returns the index of the front element (element is occupied)
@@ -251,9 +276,21 @@ template <class elmtype> int CDA<elmtype>::GetEnd() {
 // Prints the Dynamic Array the way the User should see it (front to back of used elements)
 template <class elmtype> void CDA<elmtype>::PrintArray() {
     cout << "Printing array..." << endl;
-    for(int i=0; i<size; i++) {
-        cout << array[(front+i)%capacity] << " "; // front is index of first element
+
+    // Check if Reversed, then start from back
+    if(GetReversed()) {
+        for(int i=size; i>0; i--) {
+            cout << array[(front+i-1)%capacity] << " "; // back is first index of first element
+        }
     }
+
+    // If Array isn't reversed, start from front
+    else {
+        for(int i=0; i<size; i++) {
+            cout << array[(front+i)%capacity] << " "; // front is index of first element
+        }
+    }
+
     cout << "Done Printing." << endl;
 }
 

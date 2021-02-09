@@ -104,6 +104,21 @@ int main() {
     cout << "The size of D is: " << D.Length() << endl;
     cout << "The capacity of D is: " << D.Capacity() << endl;
 
+    // Test Reverse() Function
+    cout << "Testing Reverse Function..." << endl;
+    CDA<int> E(5);
+    for (int i=0; i<E.Length(); i++) {
+        E[i] = i*10;
+    }
+    cout << "Created CDA E(5)..." << endl;
+    E.PrintArray();
+    cout << "The size of E is: " << E.Length() << endl;
+    cout << "The capacity of E is: " << E.Capacity() << endl;
+    E.Reverse();
+    cout << "E.Reverse()..." << endl;
+    E.PrintArray();
+    cout << "The size of E is: " << E.Length() << endl;
+    cout << "The capacity of E is: " << E.Capacity() << endl;
 
     // End of Tests
     cout << endl << "----- End of tests -----" << endl << endl;
