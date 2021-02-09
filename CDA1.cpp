@@ -53,7 +53,7 @@ template <class elmtype> class CDA {
         ~CDA();                     // Destructor
         
         CDA<elmtype>& operator=(const CDA<elmtype>& v);   // Copy Assignment Operator 
-        elmtype& operator[](int i);       // TO DO:
+        elmtype& operator[](int i);       // Overloaded Brackets Operator
 
         // Add and Delete Operations for CDA
         void AddEnd(elmtype v);
@@ -64,7 +64,7 @@ template <class elmtype> class CDA {
         int Length();       // returns size
         int Capacity();     // returns capacity
 
-        //void Clear();                 // TO DO:
+        void Clear();                 // TO DO:
         //void Reverse();               // TO DO:
         //elmtype Select(int k);        // TO DO:
         //void Sort();                  // TO DO:
@@ -175,6 +175,20 @@ template <class elmtype> int CDA<elmtype>::Length() { return size; }
 
 // Capacity Function
 template <class elmtype> int CDA<elmtype>::Capacity() { return capacity; }
+
+// Clear Function
+template <class elmtype> void CDA<elmtype>::Clear() {
+    delete[] array;     // Free up memory
+
+    // Set new Variables 
+    size = 0;
+    capacity = 4;
+    ordered = false;
+    reversed = false;
+    back = 0;
+    front = 0;
+    array = new elmtype[capacity];
+}
 
 // Select Function, returns the element at index k
 // TO DO: Redo so that it performs a quickselect to get smallest element k. (Not meant to access the kth element.)

@@ -96,6 +96,14 @@ int main() {
     cout << "The size of D is: " << D.Length() << endl;
     cout << "The capacity of D is: " << D.Capacity() << endl;
 
+    // Test Clear() Function
+    cout << "Testing Clear Function..." << endl;
+    cout << "D.Clear();" << endl;
+    D.Clear();
+    D.PrintArray();
+    cout << "The size of D is: " << D.Length() << endl;
+    cout << "The capacity of D is: " << D.Capacity() << endl;
+
 
     // End of Tests
     cout << endl << "----- End of tests -----" << endl << endl;
