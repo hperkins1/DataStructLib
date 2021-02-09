@@ -31,9 +31,11 @@
  *          with an array of size 0 and capacity 4.
  *          
  *          The Reverse() function changes the logical direction of the array in O(1)
- *          time by changing boolean flag status when function is called.
+ *          time by changing the boolean flag status of reversed when function is called.
  * 
- *          TO DO: FINISH DESCRIPTION..............
+ *          TO DO: FINISH DESCRIPTION.............. 
+ *          
+ *          Select, Sort, Search, BinSearch
  *  
  * 
  * 
@@ -57,38 +59,41 @@ template <class elmtype> class CDA {
         elmtype& operator[](int i);       // Overloaded Brackets Operator
 
         // Add and Delete Operations for CDA
-        void AddEnd(elmtype v);             // TO DO: Make sure Reverse works with these
-        void AddFront(elmtype v);
-        void DelEnd();
+        void AddEnd(elmtype v);
+        void AddFront(elmtype v); 
+        void DelEnd();  
         void DelFront();
 
         int Length();       // returns size
         int Capacity();     // returns capacity
 
         void Clear();
-        void Reverse();               // TO DO:
+        void Reverse();                 // TO DO: Integrate with other functions
         //elmtype Select(int k);        // TO DO:
         //void Sort();                  // TO DO:
         //int Search(elmtype e);        // TO DO:
         //int BinSearch(elmtype e);     // TO DO:
 
-        void PrintArray(); 
-        
+        void PrintArray();  // Prints CDA as user sees it
+
     private:
-        int size;
-        int capacity;
+        // Private Variables
+        int size;           // Number of elements used so far in CDA
+        int capacity;       // Number of total elements allocated in memory for CDA
         bool ordered;       // TRUE = Ordered, FALSE = Unordered
-        bool reversed;      
-        int front = 0;      // Index of front element of array (element is not available)
+        bool reversed;      // TRUE = User sees array in reverse order
+        int front = 0;      // Index of front element of array
         int back;           // Index of next available space at the back of array
         elmtype *array;     // Pointer to array data
 
+        // Helper Functions
         void CapacityCheck();       // Triggers ResizeUp() or ResizeDown()
         void ResizeUp();            // Double CDA capacity when CDA is full
         void ResizeDown();          // Halve CDA capacity when size is 25% of capacity  // TO DO:
         void Copy(const CDA<elmtype>& v);    // TO DO: Make sure Reverse works with copy
         void CopyArray(elmtype array1[], elmtype array2[], int front, int capacity, bool reversed); // TO DO: Reverse flag
 
+        // Getter Functions
         bool GetOrdered();
         bool GetReversed();
         int GetFront();
@@ -145,23 +150,47 @@ template <class elmtype> elmtype& CDA<elmtype>::operator[](int i) {
 // AddEnd Function adds new element to end of array
 template <class elmtype> void CDA<elmtype>::AddEnd(elmtype v) {
     CapacityCheck();
+
+    // Check if reverse flag is true: Call AddFront instead
+    if (reversed) {
+        reversed = false;   // Turn off Flag so AddFront() will execute
+        AddFront(v);
+        reversed = true;    // Reset flag to on
+        return;             // Exit AddEnd()
+    }
+
     array[back] = v;    
     back = (back+1)%capacity;   // Update back
     size++;                     // Update size
-    CapacityCheck();
 }
 
 // AddFront Function adds new element to front of array
 template <class elmtype> void CDA<elmtype>::AddFront(elmtype v) {
     CapacityCheck();
+
+    // Check if reverse flag is true: Call AddEnd instead
+    if (reversed) {
+        reversed = false;   // Turn off Flag so AddEnd() will execute
+        AddEnd(v);
+        reversed = true;    // Reset Flag to on
+        return;             // Exit AddFront()
+    }
+
     front = (front-1+capacity)%capacity; // Update front
     array[front] = v;
     size++;                              // Update size
-    CapacityCheck();
 }
 
 // DelEnd Function deletes the element at the end of array
 template <class elmtype> void CDA<elmtype>::DelEnd() {
+    // Check if reverse flag is true: Call DelFront instead
+    if (reversed) {
+        reversed = false;   // Turn off flag so DelFront will execute
+        DelFront();
+        reversed = true;    // Reset Flag to on
+        return;             // Exit DelEnd
+    }
+    
     back = (back-1+capacity)%capacity;  // Update back
     size--;                             // Update size
     CapacityCheck();
@@ -169,6 +198,14 @@ template <class elmtype> void CDA<elmtype>::DelEnd() {
 
 // DelFront Function deletes the element at the front of array
 template <class elmtype> void CDA<elmtype>::DelFront() {
+    // Check if reverse flag is true: Call DelEnd instead
+    if (reversed) {
+        reversed = false;   // Turn off flag so DelEnd will execute
+        DelEnd();
+        reversed = true;    // Reset Flag to on
+        return;             // Exit DelFront
+    }
+
     front = (front+1)%capacity;     // Update front
     size--;                         // Update size
     CapacityCheck();
@@ -242,15 +279,17 @@ template <class elmtype> void CDA<elmtype>::Copy(const CDA<elmtype>& v) {
 // Copy Array Function - copies elements from array2 into array1
 template <class elmtype> void CDA<elmtype>::CopyArray(elmtype array1[], elmtype array2[], int front, int capacity, bool reversed) {
     // Check for array2's reverse flag and copy array in reverse order if true
-    /*if(reversed) {
+    if(reversed) {
         for (int i=size; i>0; i--) {
-            array1[size-i] = 
+            array1[size-i] = array2[(front+i-1)%capacity];
         }
-    }*/
+    }
 
-
-    for (int i=0; i<size; i++) {
-        array1[i]=array2[(i+front)%capacity]; 
+    // If reverse is false, then just a regular array copy 
+    else {
+        for (int i=0; i<size; i++) {
+            array1[i]=array2[(i+front)%capacity]; 
+        }
     }
 }
 

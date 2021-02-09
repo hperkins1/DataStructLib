@@ -120,6 +120,47 @@ int main() {
     cout << "The size of E is: " << E.Length() << endl;
     cout << "The capacity of E is: " << E.Capacity() << endl;
 
+    // Test Reverse and CopyArray during Resize
+    // Also Test AddEnd, AddFront, DelEnd, and DelFront for reversed array
+    E.AddEnd(69);
+    cout << "E.AddEnd(69)..." << endl;
+    E.PrintArray();
+    cout << "The size of E is: " << E.Length() << endl;
+    cout << "The capacity of E is: " << E.Capacity() << endl;
+    E.AddEnd(11);
+    cout << "E.AddEnd(11)..." << endl;
+    E.PrintArray();
+    cout << "The size of E is: " << E.Length() << endl;
+    cout << "The capacity of E is: " << E.Capacity() << endl;
+    E.AddFront(200);
+    cout << "E.AddFront(200)..." << endl;
+    E.PrintArray();
+    cout << "The size of E is: " << E.Length() << endl;
+    cout << "The capacity of E is: " << E.Capacity() << endl;
+    E.AddFront(200);
+    cout << "E.AddFront(200)..." << endl;
+    E.PrintArray();
+    cout << "The size of E is: " << E.Length() << endl;
+    cout << "The capacity of E is: " << E.Capacity() << endl;
+    E.AddFront(200);
+    cout << "E.AddFront(200)..." << endl;
+    E.PrintArray();
+    cout << "The size of E is: " << E.Length() << endl;
+    cout << "The capacity of E is: " << E.Capacity() << endl;
+
+    cout << endl << "Deleting 2 from Front and 6 from Back..." << endl;
+    E.DelFront();
+    E.DelFront();
+    E.DelEnd();
+    E.DelEnd();
+    E.DelEnd();
+    E.DelEnd();
+    E.DelEnd();
+    E.DelEnd();
+    E.PrintArray();
+    cout << "The size of E is: " << E.Length() << endl;
+    cout << "The capacity of E is: " << E.Capacity() << endl;
+
     // End of Tests
     cout << endl << "----- End of tests -----" << endl << endl;
 
