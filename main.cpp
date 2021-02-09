@@ -82,6 +82,20 @@ int main() {
     cout << "The size of D is: " << D.Length() << endl;
     cout << "The capacity of D is: " << D.Capacity() << endl;
 
+    // Test Overloaded Operator Brackets
+    cout << "Testing Overloaded Bracket Operator..." << endl;
+    cout << "Setting all variables in D to 2 and B's variables to intervals of 5..." << endl << endl;
+    for (int i=0; i<B.Length(); i++) {
+        B[i] = 5*i;
+        D[i] = 2;
+    }
+    B.PrintArray();
+    cout << "The size of B is: " << B.Length() << endl;
+    cout << "The capacity of B is: " << B.Capacity() << endl;
+    D.PrintArray();
+    cout << "The size of D is: " << D.Length() << endl;
+    cout << "The capacity of D is: " << D.Capacity() << endl;
+
 
     // End of Tests
     cout << endl << "----- End of tests -----" << endl << endl;

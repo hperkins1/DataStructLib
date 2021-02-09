@@ -53,7 +53,7 @@ template <class elmtype> class CDA {
         ~CDA();                     // Destructor
         
         CDA<elmtype>& operator=(const CDA<elmtype>& v);   // Copy Assignment Operator 
-        //elmtype& operator[](int i);       // TO DO:
+        elmtype& operator[](int i);       // TO DO:
 
         // Add and Delete Operations for CDA
         void AddEnd(elmtype v);
@@ -130,6 +130,11 @@ template <class elmtype> CDA<elmtype>& CDA<elmtype>::operator=(const CDA& v) {
         CopyArray(array, v.array, v.GetFront(), capacity);  // Make sure to use front from array you are copying from
     }
     return *this;
+}
+
+// Overloaded Brackets Operator [] 
+template <class elmtype> elmtype& CDA<elmtype>::operator[](int i) {
+    return array[(i+front)%capacity];
 }
 
 // AddEnd Function adds new element to end of array
