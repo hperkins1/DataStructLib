@@ -30,7 +30,8 @@
  *          The Clear() function frees any space currently used and starts over 
  *          with an array of size 0 and capacity 4.
  *          
- *          The Reverse() function changes the logical direction of the array.
+ *          The Reverse() function changes the logical direction of the array in O(1)
+ *          time by changing boolean flag status when function is called.
  * 
  *          TO DO: FINISH DESCRIPTION..............
  *  
@@ -71,16 +72,13 @@ template <class elmtype> class CDA {
         //int Search(elmtype e);        // TO DO:
         //int BinSearch(elmtype e);     // TO DO:
 
-        bool GetOrdered();
-        bool GetReversed();
-        int GetFront();
-        int GetEnd();
-        void PrintArray();        
+        void PrintArray(); 
+        
     private:
         int size;
         int capacity;
         bool ordered;       // TRUE = Ordered, FALSE = Unordered
-        bool reversed;      //          // TO DO:
+        bool reversed;      
         int front = 0;      // Index of front element of array (element is not available)
         int back;           // Index of next available space at the back of array
         elmtype *array;     // Pointer to array data
@@ -90,6 +88,11 @@ template <class elmtype> class CDA {
         void ResizeDown();          // Halve CDA capacity when size is 25% of capacity  // TO DO:
         void Copy(const CDA<elmtype>& v);    // TO DO: Make sure Reverse works with copy
         void CopyArray(elmtype array1[], elmtype array2[], int front, int capacity, bool reversed); // TO DO: Reverse flag
+
+        bool GetOrdered();
+        bool GetReversed();
+        int GetFront();
+        int GetEnd();
 };
 
 // Default Constructor 
@@ -193,7 +196,7 @@ template <class elmtype> void CDA<elmtype>::Clear() {
 }
 
 // Reverse Function
-template <class elmtype> void CDA<elmtype>::Reverse() { reversed = true; }
+template <class elmtype> void CDA<elmtype>::Reverse() { reversed = !GetReversed(); }
 
 // Select Function, returns the element at index k
 // TO DO: Redo so that it performs a quickselect to get smallest element k. (Not meant to access the kth element.)
