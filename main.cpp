@@ -217,17 +217,91 @@ void AddDelTests() {
     Print(D);
 
     // AddEnd to Empty Array
-    cout << "AddEnd(10)" << endl;
+    cout << "AddEnd(10)..." << endl;
     D.AddEnd(10);
     Print(D);   
+    cout << "AddFront(500)..." << endl;
+    D.AddFront(500);
+    Print(D);
+
+    // Return to Empty Array
+    cout << "Making CDA D empty again..." << endl;
+    D.DelEnd();
+    D.DelEnd();
+    Print(D);
+
+    // AddFront to Empty Array
+    cout << "AddFront(10)..." << endl;
+    D.AddFront(10);
+    Print(D);   
+    cout << "AddEnd(500)..." << endl;
+    D.AddEnd(500);
+    Print(D);
 
     cout << endl << "----- END OF Add & Delete Tests -----" << endl;
 }
 
+void BracketTests() {
+    cout << "----- 3.0 Bracket Operator Tests -----" << endl;
+
+    // SETUP
+    cout << "SETUP" << endl;
+    cout << "Creating CDA B(10) = { 0 2 4 6 8 10 12 14 16 18}..." << endl;
+    CDA<int> B(10);
+    for(int i=0; i<B.Length(); i++) {
+        B[i] = 2*i;
+    }
+    Print(B);
+
+    // Bracket Operator Test
+    cout << endl << "3.1 Bracket Operator Test on Normal CDA" << endl;
+    cout << "Accessing all values of B..." << endl;
+    for(int i=0; i<B.Length(); i++) {
+        cout << "B[" << i << "]: " << B[i] << endl;
+    }
+    Print(B);
+
+    // Bracket Operator on Reversed CDA
+    cout << endl << "3.2 Bracket Operator Test on Reversed CDA" << endl;
+    cout << "Reversing B..." << endl;
+    B.Reverse();
+    cout << "Accessing all values of B..." << endl;
+    for(int i=0; i<B.Length(); i++) {
+        cout << "B[" << i << "]: " << B[i] << endl;
+    }
+    Print(B);
+
+    // Bracket Operator Test
+    cout << endl << "3.3 Bracket Operator Test on Semi-Full CDA" << endl;
+    cout << "Deleting 3 from Front..." << endl;
+    for(int i=0; i<3; i++) {
+        B.DelFront();
+    }
+    Print(B);
+    cout << "Accessing all values of B..." << endl;
+    for(int i=0; i<B.Length(); i++) {
+        cout << "B[" << i << "]: " << B[i] << endl;
+    }
+    Print(B);
+
+    // Bracket Operator on Reversed CDA
+    cout << endl << "3.4 Bracket Operator Test on Reversed  Semi-Full CDA" << endl;
+    cout << "Reversing B..." << endl;
+    B.Reverse();
+    cout << "Accessing all values of B..." << endl;
+    for(int i=0; i<B.Length(); i++) {
+        cout << "B[" << i << "]: " << B[i] << endl;
+    }
+    Print(B);
+
+    cout << endl << "----- END OF Bracket Operator Tests -----" << endl;
+}
+
 int main() {
     cout << "----- Beginning Unit Tests -----" << endl << endl;
-    //ConstructorTests();
+    ConstructorTests();
     AddDelTests();
+    BracketTests();
 
     cout << endl << "----- End of Unit Tests -----" << endl;
 }

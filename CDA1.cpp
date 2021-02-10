@@ -44,14 +44,7 @@
 using namespace std;
 #include <iostream>     // DELETE BEFORE SUBMITTING
 
-// TODO: Add on Empty Array
-
-// TODO: Test ResizeUp and ResizeDown copy arrays correctly
-// TODO: Test ResizeUp and ResizeDown copy reversed arrays correctly
-// TODO: Test Reverse with Add and Delete functions
 // TODO: Test Reverse with Bracket operator 
-// TODO: Test Copy assignment and copy constructor on Reverse CDAs
-// TODO: Test Reverse on already reversed CDA
 // TODO: Add Select, Sort, Search, and BinSearch functions
 
 /******************************************************************************************
@@ -169,7 +162,12 @@ template <class elmtype> CDA<elmtype>& CDA<elmtype>::operator=(const CDA& v) {
 
 // Overloaded Brackets Operator [] 
 template <class elmtype> elmtype& CDA<elmtype>::operator[](int i) {
-    return array[(i+front)%capacity];
+    if(reversed) {
+        return array[(back-1-i+capacity)%capacity];
+    }
+    else {
+        return array[(i+front)%capacity];
+    }
 }
 
 /******************************************************************************************
@@ -351,7 +349,7 @@ template <class elmtype> void CDA<elmtype>::Reverse() { reversed = !GetReversed(
  *******************************************************************************************/
 template <class elmtype> void CDA<elmtype>::PrintArray() {
     cout << "Printing array..." << endl;
-    
+
     // Check if Reversed, then start from back
     if(GetReversed()) {
         for(int i=size; i>0; i--) {
