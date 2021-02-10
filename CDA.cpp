@@ -74,10 +74,10 @@ template <class elmtype> class CDA {
         void Reverse();             // changes logical direction of array
 
         // Sort, Search, and Select User Functions
-        //elmtype Select(int k);        // TO DO:
-        //void Sort();                  // TO DO:
-        //int Search(elmtype e);        // TO DO:
-        //int BinSearch(elmtype e);     // TO DO:
+        elmtype Select(int k);        // TO DO:
+        void Sort();                  // TO DO:
+        int Search(elmtype e);        // TO DO:
+        int BinSearch(elmtype e);     // TO DO:
 
         // Prints CDA as User sees it
         void PrintArray();
@@ -309,9 +309,10 @@ template <class elmtype> void CDA<elmtype>::Reverse() { reversed = !GetReversed(
  * 
  * 
  *******************************************************************************************/
-// Select Function, returns the element at index k
 // TO DO: Redo so that it performs a quickselect to get smallest element k. (Not meant to access the kth element.)
-//template <class elmtype> elmtype CDA<elmtype>::Select(int k) { return array[(k+front)%capacity]; }
+template <class elmtype> elmtype CDA<elmtype>::Select(int k) { 
+    return 0; //TEMP
+}
 
 /******************************************************************************************
  * Function Name:       Sort
@@ -321,6 +322,9 @@ template <class elmtype> void CDA<elmtype>::Reverse() { reversed = !GetReversed(
  * 
  * 
  *******************************************************************************************/
+template <class elmtype> void CDA<elmtype>::Sort() { 
+
+}
 
 /******************************************************************************************
  * Function Name:       Search
@@ -330,6 +334,10 @@ template <class elmtype> void CDA<elmtype>::Reverse() { reversed = !GetReversed(
  * 
  * 
  *******************************************************************************************/
+template <class elmtype> int CDA<elmtype>::Search(elmtype e) { 
+    return 0; //TEMP
+}
+
 /******************************************************************************************
  * Function Name:       BinSearch
  * Input Parameters:    
@@ -338,7 +346,9 @@ template <class elmtype> void CDA<elmtype>::Reverse() { reversed = !GetReversed(
  * 
  * 
  *******************************************************************************************/
-
+template <class elmtype> int CDA<elmtype>::BinSearch(elmtype e) { 
+    return 0; //TEMP
+}
 
 /******************************************************************************************
  * Function Name:       PrintArray
