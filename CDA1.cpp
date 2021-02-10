@@ -96,7 +96,7 @@ template <class elmtype> class CDA {
         void ResizeUp();            // Double CDA capacity when CDA is full
         void ResizeDown();          // Halve CDA capacity when size is 25% of capacity  // TO DO:
         void Copy(const CDA<elmtype>& v);    // TO DO: Make sure Reverse works with copy
-        void CopyArray(elmtype array1[], elmtype array2[], int front, int capacity, bool reversed); // TO DO: Reverse flag
+        void CopyArray(elmtype& array1, const elmtype& array2, int front, int capacity, bool reversed); // TO DO: Reverse flag
 
         // Getter Functions
         bool GetOrdered();
@@ -352,7 +352,7 @@ template <class elmtype> void CDA<elmtype>::PrintArray() {
         }
     }
 
-    cout << "Done Printing." << endl;
+    cout << endl << "Done Printing." << endl;
 }
 
 /******************************************************************************************
@@ -374,15 +374,24 @@ template <class elmtype> void CDA<elmtype>::CapacityCheck() {
  * Purpose:             Doubles array capacity and copies old array data into new array
  *******************************************************************************************/
 template <class elmtype> void CDA<elmtype>::ResizeUp() {
-    elmtype *temp;  // New pointer for storing array data
-    temp = array;   // Store current array in temp before resizing capacity
-    capacity = capacity*2;      // Double new array capacity
+    // Create temp to store old array ptr
+    elmtype *temp;              
+    temp = array;               
     
-    array = new elmtype[capacity];      // Declare new array with new capacity
+    // Update to new capacity and declare new array with new capacity
+    capacity = capacity*2;    
+    array = new elmtype[capacity];
 
-    CopyArray(array, temp, front, (capacity/2), reversed);        // Copy elements from temp into array
+    // Copy elements from temp into array
+    CopyArray(array, temp, front, (capacity/2), reversed);       
 
-    delete[] temp;  // Free up memory
+    // Free up memory by deleting old array
+    delete[] temp;
+
+    // Set Variables since new front is 0 and copies of reversed arrays are no longer reversed
+    front = 0;
+    back = size;
+    reversed = false;
 }
 
 /******************************************************************************************
@@ -391,16 +400,34 @@ template <class elmtype> void CDA<elmtype>::ResizeUp() {
  * Return Value:        void
  * Purpose:             Halves array capacity and copies old array data into new array
  *******************************************************************************************/
-template <class elmtype> void CDA<elmtype>::ResizeDown() {}
+template <class elmtype> void CDA<elmtype>::ResizeDown() {
+    // Create temp to store old array ptr
+    elmtype *temp;              
+    temp = array;               
+    
+    // Update to new capacity and declare new array with new capacity
+    capacity = capacity/2;    
+    array = new elmtype[capacity];
 
-// Copy Function - copies elements from referenced CDA v to current CDA array
+    // Copy elements from temp into array
+    CopyArray(array, temp, front, (capacity*2), reversed);       
+
+    // Free up memory by deleting old array
+    delete[] temp;
+
+    // Set Variables since new front is 0 and copies of reversed arrays are no longer reversed
+    front = 0;
+    back = size;
+    reversed = false;
+}
+
 /******************************************************************************************
- * Function Name:       
- * Input Parameters:    
- * Return Value:        
- * Purpose:             
- * 
- * 
+ * Function Name:       Copy
+ * Input Parameters:    const CDA& v - reference to CDA object to make a copy from
+ * Return Value:        void
+ * Purpose:             Copies elements from referenced CDA v to current CDA array
+ * NOTE:                Different than CopyArray since it copies another reference CDA's array 
+ *                      rather than making a copy of it's own CDA array within the current object
  *******************************************************************************************/
 template <class elmtype> void CDA<elmtype>::Copy(const CDA<elmtype>& v) {
     // Copy v's elements into current CDA
@@ -426,15 +453,19 @@ template <class elmtype> void CDA<elmtype>::Copy(const CDA<elmtype>& v) {
 }
 
 /******************************************************************************************
- * Function Name:       
- * Input Parameters:    
- * Return Value:        
- * Purpose:             
- * 
- * 
+ * Function Name:       CopyArray
+ * Input Parameters:    elmtype& array1 - ptr to array to copy to location
+ *                      const elmtype& array2 - ptr to array to copy from location
+ *                      int front - array2's front element
+ *                      int capacity - capacity of array2
+ *                      bool reversed - flag for whether user should see reverse of array
+ * Return Value:        void
+ * Purpose:             Copies the elements from array2 to array1. Works on differently sized
+ *                      arrays. Triggered by ResizeUp and ResizeDown functions
+ * NOTE:                Different from Copy in that it copies the array already used in the
+ *                      current object into a new array of the same current CDA object
  *******************************************************************************************/
-// Copy Array Function - copies elements from array2 into array1
-template <class elmtype> void CDA<elmtype>::CopyArray(elmtype array1[], elmtype array2[], int front, int capacity, bool reversed) {
+template <class elmtype> void CDA<elmtype>::CopyArray(elmtype& array1, const elmtype& array2, int front, int capacity, bool reversed) {
     // Check for array2's reverse flag and copy array in reverse order if true
     if(reversed) {
         for (int i=size; i>0; i--) {
