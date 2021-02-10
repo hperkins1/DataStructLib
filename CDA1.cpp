@@ -1,4 +1,4 @@
-/*  
+/******************************************************************************************
  *  Data Structures Library
  *  Phase 1
  * 
@@ -33,21 +33,26 @@
  *          The Reverse() function changes the logical direction of the array in O(1)
  *          time by changing the boolean flag status of reversed when function is called.
  * 
- *          TO DO: FINISH DESCRIPTION.............. 
+ *          TODO: FINISH DESCRIPTION.............. 
  *          
  *          Select, Sort, Search, BinSearch
  *  
  * 
  * 
-*/
+ ********************************************************************************************/
 
 using namespace std;
-#include <iostream>
+#include <iostream>     // DELETE BEFORE SUBMITTING
 
-// elmtype represents template parameter for unknown parameter types
-// template <class elmtype>
+// TODO: Rewrite Copy functions
+// TODO: Integrate Reverse flags and Reverse into all functions
+// TODO: Add Select, Sort, Search, and BinSearch functions
 
-// CDA (Circular Dynamic Array) Class 
+/******************************************************************************************
+ * Class Name:  CDA<elmtype>
+ * Description: Imitates a Circular Dynamic Array using templates so that any element 
+ *              type cann be stored in the array
+ *******************************************************************************************/
 template <class elmtype> class CDA {
     public:
         CDA();                      // Default Constructor
@@ -111,7 +116,6 @@ template <class elmtype> CDA<elmtype>::CDA(int s): size(s), capacity(s), ordered
 }
 
 // Copy Constructor
-// TO DO: Figure out why this works. Also why do i need 2 loops?????
 template <class elmtype> CDA<elmtype>::CDA(CDA<elmtype>& v): size(v.Length()), capacity(v.Capacity()), ordered(v.GetOrdered()), reversed(v.GetReversed()) {
     back = size;
     front = 0;
@@ -134,7 +138,7 @@ template <class elmtype> CDA<elmtype>& CDA<elmtype>::operator=(const CDA& v) {
         size = v.Length();
         capacity = v.Capacity();
         ordered = v.GetOrdered();
-        reversed = false;
+        reversed = v.GetReversed();
         back = size;
         front = 0;
         CopyArray(array, v.array, v.GetFront(), capacity, v.GetReversed());  // Make sure to use front from array you are copying from
@@ -147,7 +151,12 @@ template <class elmtype> elmtype& CDA<elmtype>::operator[](int i) {
     return array[(i+front)%capacity];
 }
 
-// AddEnd Function adds new element to end of array
+/******************************************************************************************
+ * Function Name:       AddEnd
+ * Input Parameters:    elmtype v -  Represents unknown element type to add to end of array
+ * Return Value:        void
+ * Purpose:             Add an element of any type to the end of the CDA
+ *******************************************************************************************/
 template <class elmtype> void CDA<elmtype>::AddEnd(elmtype v) {
     CapacityCheck();
 
@@ -164,7 +173,12 @@ template <class elmtype> void CDA<elmtype>::AddEnd(elmtype v) {
     size++;                     // Update size
 }
 
-// AddFront Function adds new element to front of array
+/******************************************************************************************
+ * Function Name:       AddFront
+ * Input Parameters:    elmtype v - Represents unknown element type to add to front of array
+ * Return Value:        void
+ * Purpose:             Add an element of any type to the front of the CDA
+ *******************************************************************************************/
 template <class elmtype> void CDA<elmtype>::AddFront(elmtype v) {
     CapacityCheck();
 
@@ -181,7 +195,12 @@ template <class elmtype> void CDA<elmtype>::AddFront(elmtype v) {
     size++;                              // Update size
 }
 
-// DelEnd Function deletes the element at the end of array
+/******************************************************************************************
+ * Function Name:       DelEnd
+ * Input Parameters:    void
+ * Return Value:        void
+ * Purpose:             Remove the element at the back of the array
+ *******************************************************************************************/
 template <class elmtype> void CDA<elmtype>::DelEnd() {
     // Check if reverse flag is true: Call DelFront instead
     if (reversed) {
@@ -196,7 +215,12 @@ template <class elmtype> void CDA<elmtype>::DelEnd() {
     CapacityCheck();
 }
 
-// DelFront Function deletes the element at the front of array
+/******************************************************************************************
+ * Function Name:       DelFront
+ * Input Parameters:    void
+ * Return Value:        void
+ * Purpose:             Remove the element at the front of the array
+ *******************************************************************************************/
 template <class elmtype> void CDA<elmtype>::DelFront() {
     // Check if reverse flag is true: Call DelEnd instead
     if (reversed) {
@@ -211,14 +235,29 @@ template <class elmtype> void CDA<elmtype>::DelFront() {
     CapacityCheck();
 }
 
-
-// Length Function
+/******************************************************************************************
+ * Function Name:       Length
+ * Input Parameters:    void
+ * Return Value:        int
+ * Purpose:             Returns the current size of the used portion of the array
+ *******************************************************************************************/
 template <class elmtype> int CDA<elmtype>::Length() { return size; }
 
-// Capacity Function
+/******************************************************************************************
+ * Function Name:       Capacity
+ * Input Parameters:    void
+ * Return Value:        int
+ * Purpose:             Returns the capacity of the total alloted space for the array
+ *******************************************************************************************/
 template <class elmtype> int CDA<elmtype>::Capacity() { return capacity; }
 
-// Clear Function
+/******************************************************************************************
+ * Function Name:       Clear
+ * Input Parameters:    void
+ * Return Value:        void
+ * Purpose:             Frees any memory/space currently used and starts over with an array
+ *                      of size 0 and capacity 4
+ *******************************************************************************************/
 template <class elmtype> void CDA<elmtype>::Clear() {
     delete[] array;     // Free up memory
 
@@ -232,90 +271,60 @@ template <class elmtype> void CDA<elmtype>::Clear() {
     array = new elmtype[capacity];
 }
 
-// Reverse Function
+/******************************************************************************************
+ * Function Name:       Reverse
+ * Input Parameters:    void
+ * Return Value:        void
+ * Purpose:             Changes logical direction of the array in O(1) time by changing 
+ *                      status of Reversed bool
+ *******************************************************************************************/
 template <class elmtype> void CDA<elmtype>::Reverse() { reversed = !GetReversed(); }
 
+/******************************************************************************************
+ * Function Name:       Select
+ * Input Parameters:    
+ * Return Value:        
+ * Purpose:             
+ * 
+ * 
+ *******************************************************************************************/
 // Select Function, returns the element at index k
 // TO DO: Redo so that it performs a quickselect to get smallest element k. (Not meant to access the kth element.)
 //template <class elmtype> elmtype CDA<elmtype>::Select(int k) { return array[(k+front)%capacity]; }
 
-// Capacity Check 
-template <class elmtype> void CDA<elmtype>::CapacityCheck() {
-    if(size==capacity) { ResizeUp(); }              // Double array capacity 
-    if(size <= (capacity/4)) { ResizeDown(); }      // Halve array capacity 
-}
+/******************************************************************************************
+ * Function Name:       Sort
+ * Input Parameters:    
+ * Return Value:        
+ * Purpose:             
+ * 
+ * 
+ *******************************************************************************************/
 
-// Resize Array Up (Double capacity when size == capacity)
-template <class elmtype> void CDA<elmtype>::ResizeUp() {
-    elmtype *temp;  // New pointer for storing array data
-    temp = array;   // Store current array in temp before resizing capacity
-    capacity = capacity*2;      // Double new array capacity
-    
-    array = new elmtype[capacity];      // Declare new array with new capacity
-
-    CopyArray(array, temp, front, (capacity/2), reversed);        // Copy elements from temp into array
-
-    delete[] temp;  // Free up memory
-}
-
-// Resize Array Down (Decrease capacity by half when size is 25% of capacity)
-// TO DO: ------------------------------------------------------------------------------------
-template <class elmtype> void CDA<elmtype>::ResizeDown() {}
-
-// Copy Function - copies elements from referenced CDA v to current CDA array
-template <class elmtype> void CDA<elmtype>::Copy(const CDA<elmtype>& v) {
-    // Check for v's Reverse Flag and copy array in reverse order if true
-    /*if(v.GetReversed()) {
-        for (int i=size; i>0; i--) {
-            array[size-i] = v.array[(i+back)%capacity];
-        }
-    }*/
-    
-    for (int i=0; i<size; i++) {
-        array[i]=v.array[(i+front)%capacity]; 
-    }
-}
-
-// Copy Array Function - copies elements from array2 into array1
-template <class elmtype> void CDA<elmtype>::CopyArray(elmtype array1[], elmtype array2[], int front, int capacity, bool reversed) {
-    // Check for array2's reverse flag and copy array in reverse order if true
-    if(reversed) {
-        for (int i=size; i>0; i--) {
-            array1[size-i] = array2[(front+i-1)%capacity];
-        }
-    }
-
-    // If reverse is false, then just a regular array copy 
-    else {
-        for (int i=0; i<size; i++) {
-            array1[i]=array2[(i+front)%capacity]; 
-        }
-    }
-}
-
-// Get the bool for if array is ordered or not (TRUE = Ordered)
-template <class elmtype> bool CDA<elmtype>::GetOrdered() {
-    return ordered;
-}
-
-// Get the bool for if array order is reversed or not (TRUE = Reveresed)
-template <class elmtype> bool CDA<elmtype>::GetReversed() {
-    return reversed;
-}
-
-// Returns the index of the front element (element is occupied)
-template <class elmtype> int CDA<elmtype>::GetFront() {
-    return front;
-}
-
-// Returns the index of the empty cell at the end of the array 
-// (array is full if index of front == index of back)
-template <class elmtype> int CDA<elmtype>::GetEnd() {
-    return back;
-}
+/******************************************************************************************
+ * Function Name:       Search
+ * Input Parameters:    
+ * Return Value:        
+ * Purpose:             
+ * 
+ * 
+ *******************************************************************************************/
+/******************************************************************************************
+ * Function Name:       BinSearch
+ * Input Parameters:    
+ * Return Value:        
+ * Purpose:             
+ * 
+ * 
+ *******************************************************************************************/
 
 
-// Prints the Dynamic Array the way the User should see it (front to back of used elements)
+/******************************************************************************************
+ * Function Name:       PrintArray
+ * Input Parameters:    void
+ * Return Value:        void
+ * Purpose:             Prints the CDA as the user should see it (front to back)
+ *******************************************************************************************/
 template <class elmtype> void CDA<elmtype>::PrintArray() {
     cout << "Printing array..." << endl;
 
@@ -335,5 +344,134 @@ template <class elmtype> void CDA<elmtype>::PrintArray() {
 
     cout << "Done Printing." << endl;
 }
+
+/******************************************************************************************
+ * Function Name:       CapacityCheck
+ * Input Parameters:    void
+ * Return Value:        void
+ * Purpose:             Checks the current capacity and triggers the ResizeUp function if 
+ *                      array is full or ResizeDown function if array is 1/4 or less full
+ *******************************************************************************************/
+template <class elmtype> void CDA<elmtype>::CapacityCheck() {
+    if(size==capacity) { ResizeUp(); }              // Double array capacity 
+    if(size <= (capacity/4)) { ResizeDown(); }      // Halve array capacity 
+}
+
+/******************************************************************************************
+ * Function Name:       ResizeUp
+ * Input Parameters:    void
+ * Return Value:        void
+ * Purpose:             Doubles array capacity and copies old array data into new array
+ *******************************************************************************************/
+template <class elmtype> void CDA<elmtype>::ResizeUp() {
+    elmtype *temp;  // New pointer for storing array data
+    temp = array;   // Store current array in temp before resizing capacity
+    capacity = capacity*2;      // Double new array capacity
+    
+    array = new elmtype[capacity];      // Declare new array with new capacity
+
+    CopyArray(array, temp, front, (capacity/2), reversed);        // Copy elements from temp into array
+
+    delete[] temp;  // Free up memory
+}
+
+/******************************************************************************************
+ * Function Name:       ResizeDown
+ * Input Parameters:    void
+ * Return Value:        void
+ * Purpose:             Halves array capacity and copies old array data into new array
+ *******************************************************************************************/
+template <class elmtype> void CDA<elmtype>::ResizeDown() {}
+
+// Copy Function - copies elements from referenced CDA v to current CDA array
+/******************************************************************************************
+ * Function Name:       
+ * Input Parameters:    
+ * Return Value:        
+ * Purpose:             
+ * 
+ * 
+ *******************************************************************************************/
+template <class elmtype> void CDA<elmtype>::Copy(const CDA<elmtype>& v) {
+    // Check for v's Reverse Flag and copy array in reverse order if true
+    /*if(v.GetReversed()) {
+        for (int i=size; i>0; i--) {
+            array[size-i] = v.array[(i+back)%capacity];
+        }
+    }*/
+    
+    for (int i=0; i<size; i++) {
+        array[i]=v.array[(i+front)%capacity]; 
+    }
+}
+
+/******************************************************************************************
+ * Function Name:       
+ * Input Parameters:    
+ * Return Value:        
+ * Purpose:             
+ * 
+ * 
+ *******************************************************************************************/
+// Copy Array Function - copies elements from array2 into array1
+template <class elmtype> void CDA<elmtype>::CopyArray(elmtype array1[], elmtype array2[], int front, int capacity, bool reversed) {
+    // Check for array2's reverse flag and copy array in reverse order if true
+    if(reversed) {
+        for (int i=size; i>0; i--) {
+            array1[size-i] = array2[(front+i-1)%capacity];
+        }
+    }
+
+    // If reverse is false, then just a regular array copy 
+    else {
+        for (int i=0; i<size; i++) {
+            array1[i]=array2[(i+front)%capacity]; 
+        }
+    }
+}
+
+/******************************************************************************************
+ * Function Name:       GetOrdered
+ * Input Parameters:    void
+ * Return Value:        bool
+ * Purpose:             Returns the status of the Ordered bool flag (TRUE = ordered)
+ *                      (FALSE = unordered)
+ *******************************************************************************************/
+template <class elmtype> bool CDA<elmtype>::GetOrdered() {
+    return ordered;
+}
+
+/******************************************************************************************
+ * Function Name:       GetReversed
+ * Input Parameters:    void
+ * Return Value:        bool
+ * Purpose:             Returns the status of the Reversed bool flag (TRUE = Reverse order)
+ *                      (FALSE = normal order)
+ *******************************************************************************************/
+template <class elmtype> bool CDA<elmtype>::GetReversed() {
+    return reversed;
+}
+
+/******************************************************************************************
+ * Function Name:       GetFront
+ * Input Parameters:    void
+ * Return Value:        int
+ * Purpose:             Returns the index of the front element 
+ *******************************************************************************************/
+template <class elmtype> int CDA<elmtype>::GetFront() {
+    return front;
+}
+
+/******************************************************************************************
+ * Function Name:       GetEnd
+ * Input Parameters:    void
+ * Return Value:        int
+ * Purpose:             Returns the index of the back element (if array is full, front = back)
+ *******************************************************************************************/
+template <class elmtype> int CDA<elmtype>::GetEnd() {
+    return back;
+}
+
+
 
 
