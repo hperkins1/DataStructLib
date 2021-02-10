@@ -44,8 +44,14 @@
 using namespace std;
 #include <iostream>     // DELETE BEFORE SUBMITTING
 
-// TODO: Rewrite Copy functions
-// TODO: Integrate Reverse flags and Reverse into all functions
+// TODO: Add on Empty Array
+
+// TODO: Test ResizeUp and ResizeDown copy arrays correctly
+// TODO: Test ResizeUp and ResizeDown copy reversed arrays correctly
+// TODO: Test Reverse with Add and Delete functions
+// TODO: Test Reverse with Bracket operator 
+// TODO: Test Copy assignment and copy constructor on Reverse CDAs
+// TODO: Test Reverse on already reversed CDA
 // TODO: Add Select, Sort, Search, and BinSearch functions
 
 /******************************************************************************************
@@ -60,8 +66,8 @@ template <class elmtype> class CDA {
         CDA(CDA<elmtype>&);         // Copy Constructor    
         ~CDA();                     // Destructor
         
-        CDA<elmtype>& operator=(const CDA<elmtype>& v);   // Copy Assignment Operator 
-        elmtype& operator[](int i);       // Overloaded Brackets Operator
+        CDA<elmtype>& operator=(const CDA<elmtype>& v);     // Copy Assignment Operator 
+        elmtype& operator[](int i);                         // Overloaded Brackets Operator
 
         // Add and Delete Operations for CDA
         void AddEnd(elmtype v);
@@ -69,34 +75,39 @@ template <class elmtype> class CDA {
         void DelEnd();  
         void DelFront();
 
-        int Length();       // returns size
-        int Capacity();     // returns capacity
+        // Other User Functions
+        int Length();               // returns size
+        int Capacity();             // returns capacity
+        void Clear();               // Set size to 0 and capacity to 4
+        void Reverse();             // changes logical direction of array
 
-        void Clear();
-        void Reverse();                 // TO DO: Integrate with other functions
+        // Sort, Search, and Select User Functions
         //elmtype Select(int k);        // TO DO:
         //void Sort();                  // TO DO:
         //int Search(elmtype e);        // TO DO:
         //int BinSearch(elmtype e);     // TO DO:
 
-        void PrintArray();  // Prints CDA as user sees it
+        // Prints CDA as User sees it
+        void PrintArray();
 
     private:
         // Private Variables
-        int size;           // Number of elements used so far in CDA
-        int capacity;       // Number of total elements allocated in memory for CDA
-        bool ordered;       // TRUE = Ordered, FALSE = Unordered
-        bool reversed;      // TRUE = User sees array in reverse order
-        int front = 0;      // Index of front element of array
-        int back;           // Index of next available space at the back of array
-        elmtype *array;     // Pointer to array data
+        int size;                   // Number of elements used so far in CDA
+        int capacity;               // Number of total elements allocated in memory for CDA
+        bool ordered;               // TRUE = Ordered, FALSE = Unordered
+        bool reversed;              // TRUE = User sees array in reverse order
+        int front = 0;              // Index of front element of array
+        int back;                   // Index of next available space at the back of array
+        elmtype *array;             // Pointer to array data
 
         // Helper Functions
         void CapacityCheck();       // Triggers ResizeUp() or ResizeDown()
         void ResizeUp();            // Double CDA capacity when CDA is full
-        void ResizeDown();          // Halve CDA capacity when size is 25% of capacity  // TO DO:
-        void Copy(const CDA<elmtype>& v);    // TO DO: Make sure Reverse works with copy
-        void CopyArray(elmtype& array1, const elmtype& array2, int front, int capacity, bool reversed); // TO DO: Reverse flag
+        void ResizeDown();          // Halve CDA capacity when size is 25% of capacity
+
+        // Copy Functions
+        void Copy(const CDA<elmtype>& v);
+        void CopyArray(elmtype* array1, const elmtype* array2, int front, int capacity, bool reversed);
 
         // Getter Functions
         bool GetOrdered();
@@ -111,8 +122,8 @@ template <class elmtype> CDA<elmtype>::CDA(): size(0), capacity(1), ordered(fals
 }
 
 // Constructor for specified Size/Capacity
-template <class elmtype> CDA<elmtype>::CDA(int s): size(s), capacity(s), ordered(false), reversed(false), back(s) {
-    if(s==0) { capacity++; }        // Prevents creating an array with capacity 0
+template <class elmtype> CDA<elmtype>::CDA(int s): size(s), capacity(s), ordered(false), reversed(false), back(0) {
+    if(s==0) { capacity++; }            // Prevents creating an array with capacity 0
     array = new elmtype[capacity];
 }
 
@@ -178,9 +189,22 @@ template <class elmtype> void CDA<elmtype>::AddEnd(elmtype v) {
         return;             // Exit AddEnd()
     }
 
-    array[back] = v;    
-    back = (back+1)%capacity;   // Update back
-    size++;                     // Update size
+    // DEBUG OUTPUT
+    cout << "Back is: " << back << endl;
+    cout << "v: " << v << endl;
+    cout << "1%1: " << 1%1 << endl;
+    cout << "array[0]: " << array[0] << endl;
+    cout << "array" << array << endl;
+    cout << "array[back]: " << array[back] << endl;
+    cout << "type(array[back]): " << typeid(array[back]).name() << endl;
+    cout << "type(back): " << typeid(back).name() << endl;
+    cout << "type(v): " << typeid(v).name() << endl;
+
+    PrintArray();
+
+    array[back] = v; 
+    back = (back+1)%capacity;       // Update back
+    size++;                         // Update size
 }
 
 /******************************************************************************************
@@ -437,7 +461,6 @@ template <class elmtype> void CDA<elmtype>::Copy(const CDA<elmtype>& v) {
         for (int i=size; i>0; i--) {
             array[i-1]=v.array[(v.back-1+i)%v.capacity];
         }
-        reversed = false;
     }
     
     // Array isn't reversed, do a normal copy from front to back
@@ -454,8 +477,8 @@ template <class elmtype> void CDA<elmtype>::Copy(const CDA<elmtype>& v) {
 
 /******************************************************************************************
  * Function Name:       CopyArray
- * Input Parameters:    elmtype& array1 - ptr to array to copy to location
- *                      const elmtype& array2 - ptr to array to copy from location
+ * Input Parameters:    elmtype* array1 - ptr to array to copy to location
+ *                      const elmtype* array2 - ptr to array to copy from location
  *                      int front - array2's front element
  *                      int capacity - capacity of array2
  *                      bool reversed - flag for whether user should see reverse of array
@@ -465,7 +488,7 @@ template <class elmtype> void CDA<elmtype>::Copy(const CDA<elmtype>& v) {
  * NOTE:                Different from Copy in that it copies the array already used in the
  *                      current object into a new array of the same current CDA object
  *******************************************************************************************/
-template <class elmtype> void CDA<elmtype>::CopyArray(elmtype& array1, const elmtype& array2, int front, int capacity, bool reversed) {
+template <class elmtype> void CDA<elmtype>::CopyArray(elmtype* array1, const elmtype* array2, int front, int capacity, bool reversed) {
     // Check for array2's reverse flag and copy array in reverse order if true
     if(reversed) {
         for (int i=size; i>0; i--) {

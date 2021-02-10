@@ -72,22 +72,162 @@ void ConstructorTests() {
     B = C;
     Print(B);
 
+    // Copy Assignment Operator on Empty Array
+    cout << endl << "1.4.4 Copy Assignment Operator on Empty Array" << endl;
+    cout << "Creating CDA F = A (empty array)..." << endl;
+    CDA<int> F = A;
+    Print(F);    
 
-
-    // Constructors on Empty Arrays
     // Constructors on Reversed Arrays
-    // COnstructors on Ordered Arrays
+    cout << endl << "1.5 Constructors on Reversed Arrays" << endl;
+    cout << "Creating CDA R = { 0, 5, 10, 15 }..." << endl;
+    CDA<int> R(4);
+    for(int i=0; i<R.Length(); i++) {
+        R[i] = i*5;
+    }
+    Print(R);
+    cout << "Reversing R..." << endl;
+    R.Reverse();
+    Print(R);
 
-    // AddEnd to an array of size and length 0?
+    // Copy Constructor on Reversed Array
+    cout << endl << "1.5.1 Copy Constructor on Reversed Array" << endl;
+    cout << "Creating CDA S(R)..." << endl;
+    CDA<int> S(R);
+    Print(S);
+
+    // Copy Assignment Constructor on Reversed Array
+    cout << endl << "1.5.2 Copy Assignment Operator on Reversed Array" << endl;
+    cout << "Creating CDA T = R..." << endl;
+    CDA<int> T = R;
+    Print(T);
+
+    // Copy Assignment Operator on Reversed Array
+    cout << endl << "1.5.3 Copy Assignment Operator on Reversed Array" << endl;
+    cout << "Creating CDA U..." << endl;
+    CDA<int> U;
+    Print(U);
+    cout << "U = R..." << endl;
+    U = R;
+    Print(U);
+
+
+    // TODO: Constructors on Ordered Arrays
 
     // End of Constructor Tests
     cout << endl << "----- END OF Constructor Tests -----" << endl;
 }
 
+void AddDelTests() {
+    cout << "----- 2.0 Add and Delete Tests -----" << endl;
+    
+    // SETUP
+    cout << "SETUP" << endl;
+    cout << "Creating CDA B(10) = { 0 2 4 6 8 10 12 14 16 18}..." << endl;
+    CDA<int> B(10);
+    for(int i=0; i<B.Length(); i++) {
+        B[i] = 2*i;
+    }
+    Print(B);
+
+    // Add and Del to Normal Arrays
+    cout << endl << "2.1 AddEnd and AddFront" << endl;
+
+    // Add to Normal Arrays
+    cout << endl << "2.1.1 Add to Normal Array" << endl;
+    cout << "AddFront(500)" << endl;
+    B.AddFront(500);
+    Print(B);
+    cout << "AddEnd(44)" << endl;
+    B.AddEnd(44);
+    Print(B);
+
+    // Del to Normal Arrays
+    cout << endl << "2.1.2 Delete to Normal Array" << endl;
+    cout << "7 DelEnd()'s..." << endl;
+    for(int i=0; i<7; i++) {
+        B.DelEnd();
+    }
+    Print(B);
+    cout << "3 DelFront()'s..." << endl;
+    for(int i=0; i<3; i++) {
+        B.DelFront();
+    }
+    Print(B);
+
+    // Add and Delete to Reverse Arrays
+    cout << endl << "2.2 AddEnd and AddFront to Reversed Arrays" << endl;
+
+    // SETUP
+    cout << "SETUP" << endl;
+    cout << "Creating CDA C(4) = { 0 5 10 15 }..." << endl;
+    CDA<int> C(4);
+    for(int i=0; i<C.Length(); i++) {
+        C[i] = 5*i;
+    }
+    Print(C);
+    cout << "Reversing C..." << endl;
+    C.Reverse();
+    Print(C);
+
+    // Add to Reverse Arrays
+    cout << endl << "2.2.1 Add to Reverse Array" << endl;
+    cout << "AddFront(66)..." << endl;
+    C.AddFront(66);
+    Print(C);
+    cout << "AddEnd(22)..." << endl;
+    C.AddEnd(22);
+    Print(C);
+    cout << "AddEnd(22)..." << endl;
+    C.AddEnd(22);
+    Print(C);
+    cout << "AddEnd(11)..." << endl;
+    C.AddEnd(11);
+    Print(C);
+    cout << "AddEnd(1)..." << endl;
+    C.AddEnd(1);
+    Print(C);
+
+    // Del to Reverse Arrays
+    cout << endl << "2.2.2 Delete to Reverse Array" << endl;
+    cout << "DelFront()... " << endl;
+    C.DelFront();
+    Print(C);
+    cout << "DelEnd() 4 times..." << endl;
+    for(int i=0; i<4; i++) {
+        C.DelEnd();
+    }
+    Print(C);
+
+    // Reverse an already Reversed Array
+    cout << endl << "2.3 Reverse an Already Reversed Array" << endl;
+    cout << "Reversing C..." << endl;
+    C.Reverse();
+    Print(C);
+    cout << "CDA B:" << endl;
+    Print(B);
+    cout << "Reversing B..." << endl;
+    B.Reverse();
+    Print(B);
+
+    // AddEnd to an array of size and length 0
+    cout << endl << "2.4 Add End to an Empty Array" << endl;
+    cout << "Initializing D with Default Constructor..." << endl;
+    CDA<int> D;
+    Print(D);
+
+    // AddEnd to Empty Array
+    cout << "AddEnd(10)" << endl;
+    D.AddEnd(10);
+    Print(D);   
+
+    cout << endl << "----- END OF Add & Delete Tests -----" << endl;
+}
+
 int main() {
     cout << "----- Beginning Unit Tests -----" << endl << endl;
-    ConstructorTests();
-
+    //ConstructorTests();
+    AddDelTests();
 
     cout << endl << "----- End of Unit Tests -----" << endl;
 }
