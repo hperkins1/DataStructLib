@@ -51,7 +51,7 @@ using namespace std;
 /******************************************************************************************
  * Class Name:  CDA<elmtype>
  * Description: Imitates a Circular Dynamic Array using templates so that any element 
- *              type cann be stored in the array
+ *              type can be stored in the array
  *******************************************************************************************/
 template <class elmtype> class CDA {
     public:
@@ -112,6 +112,7 @@ template <class elmtype> CDA<elmtype>::CDA(): size(0), capacity(1), ordered(fals
 
 // Constructor for specified Size/Capacity
 template <class elmtype> CDA<elmtype>::CDA(int s): size(s), capacity(s), ordered(false), reversed(false), back(s) {
+    if(s==0) { capacity++; }        // Prevents creating an array with capacity 0
     array = new elmtype[capacity];
 }
 
@@ -135,13 +136,22 @@ template <class elmtype> CDA<elmtype>::~CDA() {
 template <class elmtype> CDA<elmtype>& CDA<elmtype>::operator=(const CDA& v) {
     // If array pointers point to same data, then skip the if statement because they are already equal
     if(array != v.array) {
-        size = v.Length();
-        capacity = v.Capacity();
-        ordered = v.GetOrdered();
-        reversed = v.GetReversed();
-        back = size;
-        front = 0;
-        CopyArray(array, v.array, v.GetFront(), capacity, v.GetReversed());  // Make sure to use front from array you are copying from
+        // Free old memory space first
+        delete[] array; 
+
+        // Copy variables
+        back = v.back;
+        front = v.front;
+        capacity = v.capacity;
+        size = v.size;
+        ordered = v.ordered;
+        reversed = v.reversed;
+
+        // Allocate space for new array
+        array = new elmtype[capacity];
+
+        // Copy v's array into array
+        Copy(v);
     }
     return *this;
 }
@@ -393,16 +403,26 @@ template <class elmtype> void CDA<elmtype>::ResizeDown() {}
  * 
  *******************************************************************************************/
 template <class elmtype> void CDA<elmtype>::Copy(const CDA<elmtype>& v) {
-    // Check for v's Reverse Flag and copy array in reverse order if true
-    /*if(v.GetReversed()) {
-        for (int i=size; i>0; i--) {
-            array[size-i] = v.array[(i+back)%capacity];
-        }
-    }*/
+    // Copy v's elements into current CDA
     
-    for (int i=0; i<size; i++) {
-        array[i]=v.array[(i+front)%capacity]; 
+    // Check for v's Reverse Flag and copy array in reverse order if true
+    if(reversed) {
+        for (int i=size; i>0; i--) {
+            array[i-1]=v.array[(v.back-1+i)%v.capacity];
+        }
+        reversed = false;
     }
+    
+    // Array isn't reversed, do a normal copy from front to back
+    else {
+        for (int i=0; i<size; i++) {
+            array[i]=v.array[(i+v.front)%v.capacity]; 
+        }
+    }
+
+    // Update front and back variables since copied array starts at index 0
+    front = 0; 
+    back = size;
 }
 
 /******************************************************************************************
