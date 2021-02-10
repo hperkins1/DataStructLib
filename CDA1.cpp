@@ -118,12 +118,12 @@ template <class elmtype> class CDA {
 
 // Default Constructor 
 template <class elmtype> CDA<elmtype>::CDA(): size(0), capacity(1), ordered(false), reversed(false), back(0) {
-    array = new elmtype[capacity];
+    array = new elmtype[1];
 }
 
 // Constructor for specified Size/Capacity
 template <class elmtype> CDA<elmtype>::CDA(int s): size(s), capacity(s), ordered(false), reversed(false), back(0) {
-    if(s==0) { capacity++; }            // Prevents creating an array with capacity 0
+    if(s==0) { capacity=1; }            // Prevents creating an array with capacity 0
     array = new elmtype[capacity];
 }
 
@@ -189,22 +189,12 @@ template <class elmtype> void CDA<elmtype>::AddEnd(elmtype v) {
         return;             // Exit AddEnd()
     }
 
-    // DEBUG OUTPUT
-    cout << "Back is: " << back << endl;
-    cout << "v: " << v << endl;
-    cout << "1%1: " << 1%1 << endl;
-    cout << "array[0]: " << array[0] << endl;
-    cout << "array" << array << endl;
-    cout << "array[back]: " << array[back] << endl;
-    cout << "type(array[back]): " << typeid(array[back]).name() << endl;
-    cout << "type(back): " << typeid(back).name() << endl;
-    cout << "type(v): " << typeid(v).name() << endl;
-
-    PrintArray();
-
+    // Add v to back of array
     array[back] = v; 
-    back = (back+1)%capacity;       // Update back
-    size++;                         // Update size
+
+    // Update Back and size
+    if(Capacity()!=1) { back = (back+1)%capacity; }
+    size++;
 }
 
 /******************************************************************************************
@@ -361,7 +351,7 @@ template <class elmtype> void CDA<elmtype>::Reverse() { reversed = !GetReversed(
  *******************************************************************************************/
 template <class elmtype> void CDA<elmtype>::PrintArray() {
     cout << "Printing array..." << endl;
-
+    
     // Check if Reversed, then start from back
     if(GetReversed()) {
         for(int i=size; i>0; i--) {
@@ -387,8 +377,8 @@ template <class elmtype> void CDA<elmtype>::PrintArray() {
  *                      array is full or ResizeDown function if array is 1/4 or less full
  *******************************************************************************************/
 template <class elmtype> void CDA<elmtype>::CapacityCheck() {
-    if(size==capacity) { ResizeUp(); }              // Double array capacity 
-    if(size <= (capacity/4)) { ResizeDown(); }      // Halve array capacity 
+    if(size==capacity) { ResizeUp(); }                          // Double array capacity 
+    if(size <= (capacity/4) && size > 0) { ResizeDown(); }      // Halve array capacity 
 }
 
 /******************************************************************************************
