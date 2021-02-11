@@ -297,12 +297,80 @@ void BracketTests() {
     cout << endl << "----- END OF Bracket Operator Tests -----" << endl;
 }
 
+void LinearSearchTests() {
+    cout << endl << "----- 4.0 BEGINNNING OF Linear Search Tests -----" << endl;
+
+    // SETUP
+    cout << "SETUP" << endl;
+    cout << "Creating CDA B(10) = { 0 2 4 6 8 10 12 14 16 18}..." << endl;
+    CDA<int> B(10);
+    for(int i=0; i<B.Length(); i++) {
+        B[i] = 2*i;
+    }
+    Print(B);
+
+    // Search Test on Regular Array (Found element)
+    cout << endl << "4.1 Search Test to Find Element on Regular Array where element exists" << endl;
+    cout << "B.Search(6)..." << endl;
+    cout << "Element found at B[" << B.Search(6) << "]" << endl;
+
+    // Search Test on Regular Array (no element found)
+    cout << endl << "4.2 Search Test to Find Element on Regular Array where element doesn't exists" << endl;
+    cout << "B.Search(20)..." << endl;
+    cout << "Element found at B[" << B.Search(20) << "]" << endl;
+
+    // Search on Reversed Array (Found element)
+    cout << endl << "4.3 Linear Search on Reversed Array (element exists)" << endl;
+    cout << "Reversing B..." << endl;
+    B.Reverse();
+    Print(B);
+    cout << "B.Search(6)..." << endl;
+    cout << "Element found at B[" << B.Search(6) << "]" << endl;
+
+    // Search on Reversed Array (no element found)
+    cout << endl << "4.4 Linear Search on Reversed Array (element does not exist)" << endl;
+    cout << "B.Search(20)..." << endl;
+    cout << "Element found at B[" << B.Search(20) << "]" << endl;
+
+    // Search on Empty Array
+    cout << endl << "4.5 Linear Search on Empty Array" << endl;
+    cout << "Creating Default CDA A..." << endl;
+    CDA<int> A;
+    Print(A);
+    cout << "A.Search(3)" << endl;
+    cout << "Element found at A[" << A.Search(3) << "]" << endl;
+
+    // Search on Semi-full Array with Moved Elements
+    cout << endl << "4.6 Linear Search on Semi-Full Array with moved elements (element exists)" << endl;
+    cout << "B.AddFront(500)" << endl;
+    B.AddFront(500);
+    Print(B);
+    cout << "B.AddEnd(44)" << endl;
+    B.AddEnd(44);
+    Print(B);
+    cout << "B.Search(44)" << endl;
+    cout << "Element found at B[" << B.Search(44) << "]" << endl;
+    cout << "B.Search(500)" << endl;
+    cout << "Element found at B[" << B.Search(500) << "]" << endl;
+    cout << "B.Search(4)" << endl;
+    cout << "Element found at B[" << B.Search(4) << "]" << endl;
+    Print(B);
+
+
+    // Search on Semi-full Array with Moved Elements
+    cout << endl << "4.7 Linear Search on Semi-Full Array with moved elements (element does not exist)" << endl;
+    cout << "B.Search(400)" << endl;
+    cout << "Element found at B[" << B.Search(400) << "]" << endl;
+    
+    cout << endl << "----- END OF Linear Search Tests -----" << endl;
+}
+
 int main() {
     cout << "----- Beginning Unit Tests -----" << endl << endl;
     ConstructorTests();
     AddDelTests();
     BracketTests();
-
+    LinearSearchTests();
 
 
     cout << endl << "----- End of Unit Tests -----" << endl;

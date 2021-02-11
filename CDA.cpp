@@ -44,7 +44,11 @@
 using namespace std;
 #include <iostream>     // DELETE BEFORE SUBMITTING
 
-// TODO: Add Select, Sort, Search, and BinSearch functions
+// TODO: Select
+// TODO: Sort
+// TODO: Search
+// TODO: BinSearch
+
 
 /******************************************************************************************
  * Class Name:  CDA<elmtype>
@@ -303,11 +307,10 @@ template <class elmtype> void CDA<elmtype>::Reverse() { reversed = !GetReversed(
 
 /******************************************************************************************
  * Function Name:       Select
- * Input Parameters:    
- * Return Value:        
- * Purpose:             
- * 
- * 
+ * Input Parameters:    int k -
+ * Return Value:        elmtype - represents the kth smallest element in the array
+ * Purpose:             Performs a Quickselect algorithm to return the kth smallest element 
+ *                      in the array. Chooses a random partition element for Quickselect.
  *******************************************************************************************/
 // TO DO: Redo so that it performs a quickselect to get smallest element k. (Not meant to access the kth element.)
 template <class elmtype> elmtype CDA<elmtype>::Select(int k) { 
@@ -316,8 +319,8 @@ template <class elmtype> elmtype CDA<elmtype>::Select(int k) {
 
 /******************************************************************************************
  * Function Name:       Sort
- * Input Parameters:    
- * Return Value:        
+ * Input Parameters:    void
+ * Return Value:        void
  * Purpose:             
  * 
  * 
@@ -328,23 +331,43 @@ template <class elmtype> void CDA<elmtype>::Sort() {
 
 /******************************************************************************************
  * Function Name:       Search
- * Input Parameters:    
- * Return Value:        
- * Purpose:             
- * 
- * 
+ * Input Parameters:    elmtype e - element that user is searching for
+ * Return Value:        int - represents the index of where the element is in the array
+ * Purpose:             Performs a linear search on the circular array to find the element
+ *                      e and returns the index of where e is at. Index is the index of
+ *                      how the user sees the array, not the actual index of how the 
+ *                      array is stored in memory. 
+ * Note:                Used for unsorted arrays
  *******************************************************************************************/
 template <class elmtype> int CDA<elmtype>::Search(elmtype e) { 
-    return 0; //TEMP
+    // Loop through array starting at front
+    // Check if Reversed, then start from back
+    if(GetReversed()) {
+        for(int i=size; i>0; i--) {
+            if(array[(front+i-1)%capacity] == e) { return (size-i); }
+        }
+    }
+
+    // If Array isn't reversed, start from front
+    else {
+        for(int i=0; i<size; i++) {
+            if(array[(front+i)%capacity] == e) { return i; }
+        }
+    }
+
+    // If element isn't found, return -1
+    return -1;
 }
 
 /******************************************************************************************
  * Function Name:       BinSearch
- * Input Parameters:    
- * Return Value:        
- * Purpose:             
- * 
- * 
+ * Input Parameters:    elmtype e - element that user is searching for
+ * Return Value:        int - represents the index of where the element is in the array
+ * Purpose:             Performs a binary search on the CDA to find the element e and returns
+ *                      the index of where e is at. Index is from where the user sees the 
+ *                      element at in the array, not the actual index of how the array's 
+ *                      elements are stored in memory.
+ * Note:                Used for sorted arrays
  *******************************************************************************************/
 template <class elmtype> int CDA<elmtype>::BinSearch(elmtype e) { 
     return 0; //TEMP
