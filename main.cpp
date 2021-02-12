@@ -365,13 +365,40 @@ void LinearSearchTests() {
     cout << endl << "----- END OF Linear Search Tests -----" << endl;
 }
 
+void BinarySearchTests() {
+    cout << endl << "----- 5.0 BEGINNNING OF Binary Search Tests -----" << endl;
+
+    // SETUP
+    cout << "SETUP" << endl;
+    cout << "Creating ordered CDA B(10) = { 0 2 4 6 8 10 12 14 16 18}..." << endl;
+    CDA<int> B(10);
+    for(int i=0; i<B.Length(); i++) {
+        B[i] = 2*i;
+    }
+    Print(B);
+
+    // Binary Search on Array where element exists
+    cout << endl << "5.1 Binary Search on Array (Element exists)" << endl;
+    cout << "B.BinSearch(4)" << endl;
+    cout << "Element found at B[" << B.BinSearch(4) << "]" << endl;
+    Print(B);
+
+    // Binary Search on Array where element does not exist
+    cout << endl << "5.1 Binary Search on Array (Element does not exist)" << endl;
+    cout << "B.BinSearch(1)" << endl;
+    cout << "Element found at B[" << B.BinSearch(1) << "]" << endl;
+    Print(B);
+
+    cout << endl << "----- END OF Binary Search Tests -----" << endl;
+}
+
 int main() {
     cout << "----- Beginning Unit Tests -----" << endl << endl;
     ConstructorTests();
     AddDelTests();
     BracketTests();
     LinearSearchTests();
-
+    BinarySearchTests();
 
     cout << endl << "----- End of Unit Tests -----" << endl;
 }

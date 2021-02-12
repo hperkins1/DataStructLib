@@ -370,7 +370,35 @@ template <class elmtype> int CDA<elmtype>::Search(elmtype e) {
  * Note:                Used for sorted arrays
  *******************************************************************************************/
 template <class elmtype> int CDA<elmtype>::BinSearch(elmtype e) { 
-    return 0; //TEMP
+    // Array should be sorted
+    // Declare variables for index partitions as user sees it
+    // How it's actually stored:
+    // int left = front;
+    // int right = (front + size) % capacity;
+
+    int left = 0;
+    int right = size - 1;
+
+    while (right >= left) { 
+        // int middle = (front + (size / 2)) % capacity;
+        int middle = (left + right) / 2;
+
+        // Check Middle Element
+        if(array[(middle+front)%capacity] == e) { return ((middle+front)%capacity); }
+
+        // If Middle Element is larger than e, then move to left half of partition and update right
+        if(array[(middle+front)%capacity] > e) {
+            right = middle - 1;
+        }
+
+        // Else if Middle Element is smaller than e, then move to right half of partion and update left
+        else {
+            left = middle + 1;
+        }
+    }
+    
+    // If element isn't found, return -1
+    return -1;
 }
 
 /******************************************************************************************
