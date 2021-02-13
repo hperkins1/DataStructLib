@@ -441,6 +441,68 @@ void BinarySearchTests() {
     cout << endl << "----- END OF Binary Search Tests -----" << endl;
 }
 
+// SORTING TESTS
+void SortTests() {
+    cout << endl << "----- 6.0 BEGINNNING OF Sorting Tests -----" << endl;
+
+    // SETUP
+    cout << "SETUP" << endl;
+    cout << "Creating CDA B(10) = { 0 2 4 6 8 10 12 14 16 18}..." << endl;
+    CDA<int> B(10);
+    for(int i=0; i<B.Length(); i++) {
+        B[i] = 2*i;
+    }
+    Print(B);
+    cout << "AddFront(500)..." << endl;
+    B.AddFront(500);
+    cout << "AddFront(49)..." << endl;
+    B.AddFront(49);
+    Print(B);
+
+    // Sort a given array
+    cout << endl << "6.1 Sort Test on Array" << endl;
+    cout << "Sorting B..." << endl;
+    B.Sort();
+    Print(B);
+
+    // Sort a reversed array
+    cout << endl << "6.2 Sort Test on Reversed Array" << endl;
+    cout << "Reversing B..." << endl;
+    B.Reverse();
+    Print(B);
+    cout << "Sorting B..." << endl;
+    B.Sort();
+    Print(B);
+
+    // Add elements to array and sort again
+    cout << endl << "6.3 Sort Test on Array after adding elements to array" << endl;
+    cout << "AddEnd(10)" << endl;
+    B.AddEnd(10);
+    Print(B);
+    cout << "AddFront(77)" << endl;
+    B.AddFront(77);
+    Print(B);
+    cout << "AddFront(33)" << endl;
+    B.AddFront(33);
+    Print(B);
+    cout << "Sorting B..." << endl;
+    B.Sort();
+    Print(B);
+
+    // Reverse Array and sort again
+    cout << endl << "6.3.1 Reverse and Sort this array again" << endl;
+    cout << "Reversing array..." << endl;
+    B.Reverse();
+    Print(B);
+    cout << "Sorting Array..." << endl;
+    B.Sort();
+    Print(B);
+
+
+
+    cout << endl << "----- END OF Sorting Tests -----" << endl;
+}
+
 int main() {
     cout << "----- Beginning Unit Tests -----" << endl << endl;
     ConstructorTests();
@@ -448,6 +510,9 @@ int main() {
     BracketTests();
     LinearSearchTests();
     BinarySearchTests();
+    SortTests();
+
+
 
     cout << endl << "----- End of Unit Tests -----" << endl;
 }

@@ -105,6 +105,10 @@ template <class elmtype> class CDA {
         void Copy(const CDA<elmtype>& v);
         void CopyArray(elmtype* array1, const elmtype* array2, int front, int capacity, bool reversed);
 
+        // Sort Helper Functions
+        void Merge(elmtype* array, int left, int middle, int right);
+        void MergeSort(elmtype* array, int left, int right);
+
         // Getter Functions
         bool GetOrdered();
         bool GetReversed();
@@ -196,6 +200,7 @@ template <class elmtype> void CDA<elmtype>::AddEnd(elmtype v) {
     // Update Back and size
     if(Capacity()!=1) { back = (back+1)%capacity; }
     size++;
+    ordered = false;
 }
 
 /******************************************************************************************
@@ -217,6 +222,7 @@ template <class elmtype> void CDA<elmtype>::AddFront(elmtype v) {
 
     front = (front-1+capacity)%capacity; // Update front
     array[front] = v;
+    ordered = false;
     size++;                              // Update size
 }
 
@@ -237,6 +243,7 @@ template <class elmtype> void CDA<elmtype>::DelEnd() {
     
     back = (back-1+capacity)%capacity;  // Update back
     size--;                             // Update size
+    ordered = false;
     CapacityCheck();
 }
 
@@ -257,6 +264,7 @@ template <class elmtype> void CDA<elmtype>::DelFront() {
 
     front = (front+1)%capacity;     // Update front
     size--;                         // Update size
+    ordered = false;
     CapacityCheck();
 }
 
@@ -303,7 +311,10 @@ template <class elmtype> void CDA<elmtype>::Clear() {
  * Purpose:             Changes logical direction of the array in O(1) time by changing 
  *                      status of Reversed bool
  *******************************************************************************************/
-template <class elmtype> void CDA<elmtype>::Reverse() { reversed = !GetReversed(); }
+template <class elmtype> void CDA<elmtype>::Reverse() { 
+    reversed = !GetReversed(); 
+    if(reversed) { ordered = false; }
+}
 
 /******************************************************************************************
  * Function Name:       Select
@@ -321,12 +332,115 @@ template <class elmtype> elmtype CDA<elmtype>::Select(int k) {
  * Function Name:       Sort
  * Input Parameters:    void
  * Return Value:        void
- * Purpose:             
- * 
- * 
+ * Purpose:             Sorts the array in O(nlgn) time in ascending order (smallest at front
+ *                      and largest elements at back). Sort method chosen is MergeSort.
  *******************************************************************************************/
 template <class elmtype> void CDA<elmtype>::Sort() { 
+    // Check if reversed array, and update flag
+    if (GetReversed()) { reversed = false; }
 
+    // Declare indices for sorted array
+    int left = 0;
+    int right = size-1;
+
+    // Call MergeSort function
+    MergeSort(array, left, right);
+
+    // Set Ordered flag to true
+    ordered = true;
+}
+
+/******************************************************************************************
+ * Function Name:       MergeSort
+ * Input Parameters:    elmtype* array - pointer to CDA array data in memory
+ *                      int left - left index of partitioned array
+ *                      int right - right index of partitioned array
+ * Return Value:        void
+ * Purpose:             Recursively partitions and calls Merge function on the CDA to sort
+ *                      array in smaller partitions until ultimately merging entire array.
+ *                      This function also calculates the middle index and stops partitioning
+ *                      once array is size 1 or 2.
+ *******************************************************************************************/
+template <class elmtype> void CDA<elmtype>::MergeSort(elmtype* array, int left, int right) { 
+    // Check that array partitions aren't smaller than 1 element
+    if (left >= right) { return; }
+
+    // Calculate middle
+    int middle = (left + right)/2;
+
+    // Continue Splittle arrays into smaller partitions recursively
+    MergeSort(array, left, middle);
+    MergeSort(array, (middle+1), right);
+
+    // Call Merge to sort and merge all divided arrays into 1 sorted array
+    Merge(array, left, middle, right);
+}
+
+/******************************************************************************************
+ * Function Name:       Merge
+ * Input Parameters:    elmtype* array - pointer to CDA array data in memory
+ *                      int left - left index of partitioned array
+ *                      int middle - middle index of partitioned array
+ *                      int right - right index of partitioned array
+ * Return Value:        void
+ * Purpose:             Sorts the partitioned array in ascending order by creating 2 temp 
+ *                      arrays to store data during comparison of element values.
+ *******************************************************************************************/
+template <class elmtype> void CDA<elmtype>::Merge(elmtype* array, int left, int middle, int right) { 
+    // Create temp arrays
+    elmtype* temp1;
+    elmtype* temp2;
+    int temp1Size = (middle-left+1);
+    int temp2Size = (right-middle);
+    temp1 = new elmtype[temp1Size];
+    temp2 = new elmtype[temp2Size];
+
+    // Copy data to temp arrays
+    for (int i=0; i<temp1Size; i++) {
+        // front-left+capacity is the offset from the the array's storage in memory
+        temp1[i]=array[(i+front+left+capacity)%capacity];
+    }
+    for (int i=0; i<temp2Size; i++) {
+        temp2[i]=array[(middle+1+i+front+capacity)%capacity];
+    }
+
+    // Declare new indices i and j to compare elements
+    int i=0;
+    int j=0;
+    int index = left;
+
+    // Merge temp1 and temp2 into sorted array
+    // Compare values between temp1 and temp2
+    while((i<temp1Size) && (j<temp2Size)) {
+        // Take and place smaller element 
+        if (temp1[i] <= temp2[j]) {
+            array[(index+front)%capacity] = temp1[i];
+            i++;
+        }
+        else {
+            array[((index+front)%capacity)] = temp2[j];
+            j++;
+        }
+        index++;
+    }
+
+    // Copy remaining elements of temp1 once temp2 is empty
+    while(i<temp1Size) {
+        array[(index+front)%capacity] = temp1[i];
+        i++;
+        index++;
+    }
+
+    // Copy remaining elements of temp2 once temp1 is empty
+    while(j<temp2Size) {
+        array[(index+front)%capacity] = temp2[j];
+        j++;
+        index++;
+    }
+
+    // Free up memory
+    delete[] temp1;
+    delete[] temp2;
 }
 
 /******************************************************************************************
