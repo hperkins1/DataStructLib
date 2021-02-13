@@ -384,10 +384,59 @@ void BinarySearchTests() {
     Print(B);
 
     // Binary Search on Array where element does not exist
-    cout << endl << "5.1 Binary Search on Array (Element does not exist)" << endl;
+    cout << endl << "5.2 Binary Search on Array (Element does not exist)" << endl;
     cout << "B.BinSearch(1)" << endl;
     cout << "Element found at B[" << B.BinSearch(1) << "]" << endl;
     Print(B);
+
+    // SETUP
+    cout << endl << "SETUP" << endl;
+    cout << "Creating ordered CDA R(10) = { 18 16 14 12 10 8 6 4 2 0}..." << endl;
+    CDA<int> R(10);
+    for (int i=0; i<R.Length(); i++) {
+        R[i] = (2*(R.Length()-i) - 2);
+    }
+    Print(R);
+    R.Reverse();
+    cout << "Reversing R..." << endl;
+    Print(R);
+
+    // Test on Reversed Arrays (element exists)
+    cout << endl << "5.3 Binary Search on Reversed Array (Element exists)" << endl;
+    cout << "R.BinSearch(4)" << endl;
+    cout << "Element found at B[" << R.BinSearch(4) << "]" << endl;
+    Print(R);
+    cout << "R.BinSearch(18)" << endl;
+    cout << "Element found at B[" << R.BinSearch(18) << "]" << endl;
+    cout << "AddEnd(50)" << endl;
+    R.AddEnd(50);
+    for(int i=0; i<R.Length(); i++) {
+        cout << R[i] << " ";
+    }
+    Print(R);
+    cout << "DelFront()" << endl;
+    R.DelFront();
+    for(int i=0; i<R.Length(); i++) {
+        cout << R[i] << " ";
+    }
+    Print(R);
+    cout << "R.BinSearch(2)" << endl;
+    cout << "Element found at R[" << R.BinSearch(2) << "]" << endl;
+    cout << "Was expecting element at R[0]: " << R[0] << endl;
+    cout << "R.BinSearch(50)" << endl;
+    cout << "Element found at R[" << R.BinSearch(50) << "]" << endl;
+    cout << "Was expecting element at R[9]: " << R[9] << endl;
+    Print(R);
+
+    // Test on Reversed Arrays (Element not there)
+    cout << endl << "5.4 Binary Search on Reversed Array (Element does not exist)" << endl;
+    cout << "R.BinSearch(1)" << endl;
+    cout << "Element found at B[" << R.BinSearch(1) << "]" << endl;
+    Print(R);
+    cout << "Was expecting element at B[-1]: because element does not exist" << endl; 
+
+    // Test on Empty Arrays
+    // Test on Arrays that are Semi-full and have been moved around in memory
 
     cout << endl << "----- END OF Binary Search Tests -----" << endl;
 }

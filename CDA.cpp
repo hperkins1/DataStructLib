@@ -383,17 +383,44 @@ template <class elmtype> int CDA<elmtype>::BinSearch(elmtype e) {
         // int middle = (front + (size / 2)) % capacity;
         int middle = (left + right) / 2;
 
-        // Check Middle Element
-        if(array[(middle+front)%capacity] == e) { return ((middle+front)%capacity); }
+        // REVERSED Arrays TODO: Make this work for Reversed Arrays 
+        // These are seen as smallest to largest to user but actually stored as largest to smallest
+        if(GetReversed()){
+            // Check Middle Element
+            if(array[(front+capacity-middle)%capacity] == e) {
+                // Need to reverse it again by "size - 1" - actual index to reflect what user sees
+                int index = size - 1 - ((front+capacity-middle)%capacity);
+                return (index);
+            }
 
-        // If Middle Element is larger than e, then move to left half of partition and update right
-        if(array[(middle+front)%capacity] > e) {
-            right = middle - 1;
+            // If Middle Element is smaller than e, then move to left half of partition and update right
+            if(array[(front-middle+capacity)%capacity] > e) {
+                right = middle - 1;
+            }
+
+            // Else if Middle Element is larger than e, then move to right half of partition and update left
+            else {
+                left = middle + 1;
+            }
         }
 
-        // Else if Middle Element is smaller than e, then move to right half of partion and update left
+        // NORMAL Non-Reversed Arrays
+        // User and memory store these from smallest to largest
         else {
-            left = middle + 1;
+            // Check Middle Element
+            if(array[(middle+front)%capacity] == e) { 
+                return ((middle)%capacity); 
+            }
+
+            // If Middle Element is larger than e, then move to left half of partition and update right
+            if(array[(middle+front)%capacity] > e) {
+                right = middle - 1;
+            }
+
+            // Else if Middle Element is smaller than e, then move to right half of partition and update left
+            else {
+                left = middle + 1;
+            }
         }
     }
     
