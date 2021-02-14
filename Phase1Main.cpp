@@ -6,7 +6,7 @@ void foo(CDA<int> x) {
 	for (int i=0; i<x.Length()/2; i++)
 		x[i] = x[x.Length()/2+i];
 	// X => "5 4 3 2 0 5 5 4 3 2 0 5"	
-	for (int i=0; i< X.Length();i++) cout << X[i] << " ";  cout << endl;
+	for (int i=0; i< x.Length();i++) cout << x[i] << " ";  cout << endl;
 }
 
 int main(){
@@ -42,7 +42,7 @@ int main(){
 	cout << "Select is " << A.Search(5) << endl;
 	// A => "0 1 2 3 4 5 6 7 8 9 15 19" Search => 5
 	cout << "Select is " << A.BinSearch(12) << endl;
-	// A => "0 1 2 3 4 5 6 7 8 9 15 19" Search => -11
+	// A => "0 1 2 3 4 5 6 7 8 9 15 19" Search => -1
 	A.AddFront(10); 
 	// A => "10 0 1 2 3 4 5 6 7 8 9 15 19"
 	cout << "Select is " << A.Select(3) << endl;
