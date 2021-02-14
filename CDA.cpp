@@ -33,16 +33,19 @@
  *          The Reverse() function changes the logical direction of the array in O(1)
  *          time by changing the boolean flag status of reversed when function is called.
  * 
- *          TODO: FINISH DESCRIPTION.............. 
+ *          The Select() function performs a QuickSelect algorithm to return the kth 
+ *          smallest element of the array.
+ * 
+ *          The Sort() function sorts the array in O(nlgn) time by using MergeSort
  *          
- *          Select, Sort, Search, BinSearch
+ *          There are 2 search functions: Search() and BinSearch(). Search() does a 
+ *          linear search for the desired element whereas BinSearch() performs a 
+ *          binary search on a sorted array. If the element isn't found, it returns -1.
  *  
- * 
- * 
  ********************************************************************************************/
 
 using namespace std;
-#include <iostream>     // DELETE BEFORE SUBMITTING
+//#include <iostream>     // DELETE BEFORE SUBMITTING
 
 
 /******************************************************************************************
@@ -79,7 +82,7 @@ template <class elmtype> class CDA {
         int BinSearch(elmtype e);     // TO DO:
 
         // Prints CDA as User sees it
-        void PrintArray();
+        // void PrintArray();
 
     private:
         // Private Variables
@@ -637,7 +640,7 @@ template <class elmtype> int CDA<elmtype>::BinSearch(elmtype e) {
  * Return Value:        void
  * Purpose:             Prints the CDA as the user should see it (front to back)
  *******************************************************************************************/
-template <class elmtype> void CDA<elmtype>::PrintArray() {
+/*template <class elmtype> void CDA<elmtype>::PrintArray() {
     cout << "Printing array..." << endl;
 
     // Check if Reversed, then start from back
@@ -655,7 +658,7 @@ template <class elmtype> void CDA<elmtype>::PrintArray() {
     }
 
     cout << endl << "Done Printing." << endl;
-}
+}*/
 
 /******************************************************************************************
  * Function Name:       CapacityCheck

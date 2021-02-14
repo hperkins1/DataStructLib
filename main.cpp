@@ -3,7 +3,11 @@ using namespace std;
 #include "CDA.cpp"
 
 void Print(CDA<int> &v) {
-    v.PrintArray();
+    //v.PrintArray();
+    for(int i=0; i<v.Length(); i++) {
+        cout << v[i] << " ";
+    }
+    cout << endl;
     cout << "Size: " << v.Length() << endl;
     cout << "Capacity: " << v.Capacity() << endl;
 }
