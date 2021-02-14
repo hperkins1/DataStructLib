@@ -498,7 +498,26 @@ void SortTests() {
     B.Sort();
     Print(B);
 
+    // Test Select on Ordered Arrays
+    cout << endl << "6.4 Select on Ordered Arrays" << endl;
+    cout << "Select 2nd smallest element: " << B.Select(2) << endl;
+    cout << "Select 5th smallest element: " << B.Select(5) << endl;
 
+    // Test Select on UnOrdered Arrays
+    cout << endl << "6.4.1 Select on Unordered Arrays (reversed)" << endl;
+    cout << "Reversing B..." << endl;
+    B.Reverse();
+    Print(B);
+    cout << "Select 2nd smallest element: " << B.Select(2) << endl;
+    cout << "Select 5th smallest element: " << B.Select(5) << endl;
+
+    // Test Select on UnOrdered Arrays 
+    cout << endl << "6.4.2 Select on Unordered Array (not Reversed)" << endl;
+    cout << "Reversing B..." << endl;
+    B.Reverse();
+    Print(B);
+    cout << "Select 2nd smallest element: " << B.Select(2) << endl;
+    cout << "Select 5th smallest element: " << B.Select(5) << endl;
 
     cout << endl << "----- END OF Sorting Tests -----" << endl;
 }

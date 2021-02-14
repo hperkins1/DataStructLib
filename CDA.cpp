@@ -44,11 +44,6 @@
 using namespace std;
 #include <iostream>     // DELETE BEFORE SUBMITTING
 
-// TODO: Select
-// TODO: Sort
-// TODO: Search
-// TODO: BinSearch
-
 
 /******************************************************************************************
  * Class Name:  CDA<elmtype>
@@ -105,6 +100,11 @@ template <class elmtype> class CDA {
         void Copy(const CDA<elmtype>& v);
         void CopyArray(elmtype* array1, const elmtype* array2, int front, int capacity, bool reversed);
 
+        // Select Helper Functions
+        int Partition(int left, int right);
+        void Swap(elmtype* array, int index1, int index2);
+        int QuickSelect(int left, int right, int k);
+
         // Sort Helper Functions
         void Merge(elmtype* array, int left, int middle, int right);
         void MergeSort(elmtype* array, int left, int right);
@@ -139,7 +139,6 @@ template <class elmtype> CDA<elmtype>::CDA(CDA<elmtype>& v): size(v.Length()), c
 
 // Destructor for CDA Class
 template <class elmtype> CDA<elmtype>::~CDA() { 
-    cout << "Deleting class..." << endl;
     delete[] array;     // Free the memory space
 }
 
@@ -318,14 +317,104 @@ template <class elmtype> void CDA<elmtype>::Reverse() {
 
 /******************************************************************************************
  * Function Name:       Select
- * Input Parameters:    int k -
+ * Input Parameters:    int k - kth smallest element to find
  * Return Value:        elmtype - represents the kth smallest element in the array
  * Purpose:             Performs a Quickselect algorithm to return the kth smallest element 
  *                      in the array. Chooses a random partition element for Quickselect.
  *******************************************************************************************/
-// TO DO: Redo so that it performs a quickselect to get smallest element k. (Not meant to access the kth element.)
 template <class elmtype> elmtype CDA<elmtype>::Select(int k) { 
-    return 0; //TEMP
+    // Check if ordered first
+    if(GetOrdered()) { return array[(front+k-1)%capacity]; }    
+
+    // NOTE: All ordered arrays are reversed=false due to sort function
+
+    // Create left and right variables to how user sees array
+    int left = 0;
+    int right = size-1;
+
+    // Call QuickSelect function to calculate index
+    int index = QuickSelect(left, right, k-1);
+
+    // Return item from where it is stored in array memory
+    return array[(index+front)%capacity];
+}
+
+/******************************************************************************************
+ * Function Name:       Partition
+ * Input Parameters:    int left - front index of partition set
+ *                      int right - last index of partition set
+ * Return Value:        int - represents a potential index for kth smallest element
+ * Purpose:             Partitions the array starting from the back to find a potential
+ *                      index for the kth smallest element
+ *******************************************************************************************/
+template <class elmtype> int CDA<elmtype>::Partition(int left, int right) {
+    // Start Pivot at end of the array
+    elmtype pivot = array[(right+front)%capacity];
+    // Partition Index starts at front of the array
+    int partitionIndex = left;
+
+    // Move elements less than pivot to left of the array with swap function
+    for(int i=left; i<right; i++) {
+        if(array[(front+i)%capacity] <= pivot) {
+            Swap(array, (front+i)%capacity, (partitionIndex+front)%capacity);
+            partitionIndex++;
+        }
+    }
+
+    // Found PartitionIndex
+    Swap(array, (partitionIndex+front)%capacity, (right+front)%capacity);
+    return partitionIndex;
+}
+
+/******************************************************************************************
+ * Function Name:       Swap
+ * Input Parameters:    elmtype* array - pointer to array in memory
+ *                      int index1 - index of 1st element to swap
+ *                      int index2 - index of element to swap with 
+ * Return Value:        void 
+ * Purpose:             Swaps 2 elements with eachother in the array memory
+ *******************************************************************************************/
+template <class elmtype> void CDA<elmtype>::Swap(elmtype* array, int index1, int index2) {
+    // Declare temp variable to hold old array index 1
+    elmtype temp = array[index1];
+
+    // Swap elements
+    array[index1] = array[index2];
+    array[index2] = array[index1];
+}
+
+/******************************************************************************************
+ * Function Name:       QuickSelect
+ * Input Parameters:    int left - front index to select from
+ *                      int right - last index to select from
+ *                      int k - the kth smallest element
+ * Return Value:        int - Represents a potential index of kth smallest element of array
+ * Purpose:             Performs a Quickselect algorithm to return the kth smallest element 
+ *                      in the array. Calls the Partition function to get a potential index
+ *                      for kth smallest element
+ *******************************************************************************************/
+template <class elmtype> int CDA<elmtype>::QuickSelect(int left, int right, int k) {
+    // only run while array is size 1 and larger
+    if (left < right) {
+        // Call PartitionIndex to calculate new partition
+        int partitionIndex = Partition(left, right);
+
+        // If partitionIndex is k then the kth smallest element has been found
+        if (k == partitionIndex) { return k; }
+
+        // If k is less than partitionIndex then try QuickSelect function again at the left side of array
+        if (k < partitionIndex) {
+            return QuickSelect(left, (partitionIndex - 1), k);
+        }
+        
+        // If k is greater than partitionIndex, then try QuickSelect function again at right side of array
+        else {
+            return QuickSelect((partitionIndex + 1), right, k);
+        }
+    }
+
+    // Element not found --> Out of Bounds error
+    else { return -1; }
 }
 
 /******************************************************************************************
@@ -734,7 +823,3 @@ template <class elmtype> int CDA<elmtype>::GetFront() {
 template <class elmtype> int CDA<elmtype>::GetEnd() {
     return back;
 }
-
-
-
-
