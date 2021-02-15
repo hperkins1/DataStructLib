@@ -115,6 +115,10 @@ void ConstructorTests() {
     U = R;
     Print(U);
 
+    // Bracket Operator out of bounds test
+    cout << endl << "1.6 Bracket Operator Test for Out of Bounds Reference" << endl;
+    cout << "Printing out of bounds with [] operator..." << endl;
+    cout << "B[25]: " << B[25] << endl;
 
     // TODO: Constructors on Ordered Arrays
 
@@ -502,13 +506,34 @@ void SortTests() {
     B.Sort();
     Print(B);
 
+    cout << endl << "----- END OF Sorting Tests -----" << endl;
+}
+
+void SelectTests() {
+    cout << endl << "----- 7.0 BEGINNNING OF QuickSelect Tests -----" << endl;
+
+    // SETUP
+    cout << "SETUP" << endl;
+    cout << "Creating CDA B(10) = { 0 2 4 6 8 10 12 14 16 18}..." << endl;
+    CDA<int> B(10);
+    for(int i=0; i<B.Length(); i++) {
+        B[i] = 2*i;
+    }
+    Print(B);
+    cout << "AddFront(500)..." << endl;
+    B.AddFront(500);
+    cout << "AddFront(49)..." << endl;
+    B.AddFront(49);
+    Print(B);
+    
     // Test Select on Ordered Arrays
-    cout << endl << "6.4 Select on Ordered Arrays" << endl;
+    cout << endl << "7.1 Select on Ordered Arrays" << endl;
     cout << "Select 2nd smallest element: " << B.Select(2) << endl;
     cout << "Select 5th smallest element: " << B.Select(5) << endl;
+    Print(B);
 
     // Test Select on UnOrdered Arrays
-    cout << endl << "6.4.1 Select on Unordered Arrays (reversed)" << endl;
+    cout << endl << "7.2 Select on Unordered Arrays (reversed)" << endl;
     cout << "Reversing B..." << endl;
     B.Reverse();
     Print(B);
@@ -516,26 +541,96 @@ void SortTests() {
     cout << "Select 5th smallest element: " << B.Select(5) << endl;
 
     // Test Select on UnOrdered Arrays 
-    cout << endl << "6.4.2 Select on Unordered Array (not Reversed)" << endl;
+    cout << endl << "7.2.1 Select on Unordered Array (not Reversed)" << endl;
     cout << "Reversing B..." << endl;
     B.Reverse();
     Print(B);
     cout << "Select 2nd smallest element: " << B.Select(2) << endl;
     cout << "Select 5th smallest element: " << B.Select(5) << endl;
 
-    cout << endl << "----- END OF Sorting Tests -----" << endl;
+    // Select on Arrays after Add
+    cout << endl << "7.3 Select on Unordered Array (not Reversed) after ADD" << endl;
+    cout << "AddFront(45)..." << endl;
+    B.AddFront(45);
+    Print(B);
+    cout << "Select 2nd smallest element: " << B.Select(2) << endl;
+    cout << "Select 5th smallest element: " << B.Select(5) << endl;
+    cout << "AddEnd(199)..." << endl;
+    B.AddEnd(199);
+    Print(B);
+    cout << "AddEnd(1)..." << endl;
+    B.AddEnd(1);
+    Print(B);
+    cout << "Select 2nd smallest element: " << B.Select(2) << endl;
+    cout << "Select 5th smallest element: " << B.Select(5) << endl;
+    Print(B);
+
+    // Select on Reversed Arrays after Add
+    cout << endl << "7.3 Select on Unordered Array (Reversed) after ADD" << endl;
+    cout << "Reversing B..." << endl;
+    B.Reverse();
+    Print(B);
+    cout << "Select 2nd smallest element: " << B.Select(2) << endl;
+    cout << "Select 5th smallest element: " << B.Select(5) << endl;
+    cout << "AddEnd(199)..." << endl;
+    B.AddEnd(199);
+    Print(B);
+    cout << "AddEnd(1)..." << endl;
+    B.AddEnd(1);
+    Print(B);
+    cout << "Select 2nd smallest element: " << B.Select(2) << endl;
+    cout << "Select 5th smallest element: " << B.Select(5) << endl;
+    Print(B);
+
+    // Select on Arrays after Deletes
+    cout << endl << "7.4 Select on Unordered Arrays (not Reversed) after DEL" << endl;
+    cout << "Returning B to not reversed array..." << endl;
+    B.Reverse();
+    Print(B);
+    cout << "Deleting 5 fronts and 2 backs..." << endl;
+    for(int i=0; i<5; i++) {
+        B.DelFront();
+    }
+    B.DelEnd();
+    B.DelEnd();
+    Print(B);
+    cout << "Select 2nd smallest element: " << B.Select(2) << endl;
+    cout << "Select 5th smallest element: " << B.Select(5) << endl;
+
+    // Select on Unordered and Reversed Array
+    cout << endl << "7.4.1 Select on Unordered and Reversed Arrays after DEL" << endl;
+    cout << "Reversing B..." << endl;
+    B.Reverse();
+    Print(B);
+    cout << "Deleting 5 fronts and 2 backs..." << endl;
+    for(int i=0; i<5; i++) {
+        B.DelFront();
+    }
+    B.DelEnd();
+    B.DelEnd();
+    Print(B);
+    cout << "Select 2nd smallest element: " << B.Select(2) << endl;
+
+    // Select on Array using out of bounds index
+    cout << endl << "7.5 Select using out of bounds index" << endl;
+    cout << "Array size: " << B.Length() << endl;
+    cout << "Select 5th smallest element: " << B.Select(5) << endl;
+    cout << "Select 0th smallest element: " << B.Select(0) << endl;
+    cout << "Select -4th smallest element: " << B.Select(-4) << endl;
+
+    cout << endl << "----- END OF QuickSelect Tests -----" << endl;
 }
 
 int main() {
     cout << "----- Beginning Unit Tests -----" << endl << endl;
+
     ConstructorTests();
     AddDelTests();
     BracketTests();
     LinearSearchTests();
     BinarySearchTests();
     SortTests();
-
-
+    SelectTests();
 
     cout << endl << "----- End of Unit Tests -----" << endl;
 }

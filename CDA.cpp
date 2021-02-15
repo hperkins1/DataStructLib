@@ -45,7 +45,8 @@
  ********************************************************************************************/
 
 using namespace std;
-//#include <iostream>     // DELETE BEFORE SUBMITTING
+#include <iostream>
+#include <cstdlib>
 
 
 /******************************************************************************************
@@ -93,6 +94,7 @@ template <class elmtype> class CDA {
         int front = 0;              // Index of front element of array
         int back;                   // Index of next available space at the back of array
         elmtype *array;             // Pointer to array data
+        elmtype *dummy;              // Dummy Variable for out of bounds calls for [] operator
 
         // Helper Functions
         void CapacityCheck();       // Triggers ResizeUp() or ResizeDown()
@@ -171,6 +173,11 @@ template <class elmtype> CDA<elmtype>& CDA<elmtype>::operator=(const CDA& v) {
 
 // Overloaded Brackets Operator [] 
 template <class elmtype> elmtype& CDA<elmtype>::operator[](int i) {
+    if(i > size) {
+        cout << "ERROR: Out of bounds reference (0..." << (size-1) << ")" << endl;
+        return array[-1];
+    }
+    
     if(reversed) {
         return array[(back-1-i+capacity)%capacity];
     }
@@ -324,18 +331,25 @@ template <class elmtype> void CDA<elmtype>::Reverse() {
  * Return Value:        elmtype - represents the kth smallest element in the array
  * Purpose:             Performs a Quickselect algorithm to return the kth smallest element 
  *                      in the array. Chooses a random partition element for Quickselect.
+ * NOTE:                This function rearranges the values in the array.
  *******************************************************************************************/
 template <class elmtype> elmtype CDA<elmtype>::Select(int k) { 
-    // Check if ordered first
-    if(GetOrdered()) { return array[(front+k-1)%capacity]; }    
+    // Check if k is in bounds
+    if((k > size) || (k < 1)) { 
+        cout << "ERROR: out of bounds reference (1..." << size << ")" << endl;
+        return array[-1]; 
+    }
 
+    // Check if ordered
     // NOTE: All ordered arrays are reversed=false due to sort function
+    if(GetOrdered()) { return array[(front+k-1)%capacity]; }    
 
     // Create left and right variables to how user sees array
     int left = 0;
     int right = size-1;
 
     // Call QuickSelect function to calculate index
+    // Note: Need to call k-1 since kth element is at k-1 index
     int index = QuickSelect(left, right, k-1);
 
     // Return item from where it is stored in array memory
@@ -347,25 +361,37 @@ template <class elmtype> elmtype CDA<elmtype>::Select(int k) {
  * Input Parameters:    int left - front index of partition set
  *                      int right - last index of partition set
  * Return Value:        int - represents a potential index for kth smallest element
- * Purpose:             Partitions the array starting from the back to find a potential
- *                      index for the kth smallest element
+ * Purpose:             Creates a random pivotIndex and partitions the array with the 
+ *                      values smaller than the pivot to the left of the partitionIndex
+ *                      and elements larger than the pivot are stored to the right of the 
+ *                      partitionIndex
  *******************************************************************************************/
 template <class elmtype> int CDA<elmtype>::Partition(int left, int right) {
-    // Start Pivot at end of the array
-    elmtype pivot = array[(right+front)%capacity];
-    // Partition Index starts at front of the array
+    // Partition Index starts at front of the array and keeps track of tail of smallest elements
     int partitionIndex = left;
 
-    // Move elements less than pivot to left of the array with swap function
+    // Select a random pivot index from available indices between left and right
+    int pivotIndex = rand() % (right - left + 1) + left;
+
+    // Start Pivot at the random pivotIndex
+    elmtype pivot = array[(pivotIndex+front)%capacity];
+
+    // Swap the pivot with the element at Right so pivot will be at end of subarray
+    Swap(array, (pivotIndex+front)%capacity, (right+front)%capacity); 
+
+    // Starting at left side of subarray, check if each element is less than pivot
     for(int i=left; i<right; i++) {
         if(array[(front+i)%capacity] <= pivot) {
+            // Move elements less than pivot to left of the array with swap function
             Swap(array, (front+i)%capacity, (partitionIndex+front)%capacity);
             partitionIndex++;
         }
     }
 
-    // Found PartitionIndex
+    // Swap the pivot back into the subarray at partitionIndex;
     Swap(array, (partitionIndex+front)%capacity, (right+front)%capacity);
+
+    // Found PartitionIndex
     return partitionIndex;
 }
 
@@ -383,7 +409,7 @@ template <class elmtype> void CDA<elmtype>::Swap(elmtype* array, int index1, int
 
     // Swap elements
     array[index1] = array[index2];
-    array[index2] = array[index1];
+    array[index2] = temp;
 }
 
 /******************************************************************************************
@@ -398,7 +424,7 @@ template <class elmtype> void CDA<elmtype>::Swap(elmtype* array, int index1, int
  *******************************************************************************************/
 template <class elmtype> int CDA<elmtype>::QuickSelect(int left, int right, int k) {
     // only run while array is size 1 and larger
-    if (left < right) {
+    if (left <= right) {
         // Call PartitionIndex to calculate new partition
         int partitionIndex = Partition(left, right);
 
@@ -417,7 +443,10 @@ template <class elmtype> int CDA<elmtype>::QuickSelect(int left, int right, int 
     }
 
     // Element not found --> Out of Bounds error
-    else { return -1; }
+    else { 
+        cout << "ERROR: Element not found" << endl;
+        return -1; 
+    }
 }
 
 /******************************************************************************************
