@@ -632,6 +632,19 @@ int main() {
     SortTests();
     SelectTests();
 
+    cout << "Creating CDA B with parameter of 4 [B(4)]..." << endl;
+    CDA<int> B(4);
+    Print(B);
+
+    CDA<int> A;
+    Print(A);
+    cout << "Setting A(B)..." << endl;
+    A(B);
+    cout << "B: " << endl;
+    Print(B);
+    cout << "A: " << endl;
+    Print(A);
+
     cout << endl << "----- End of Unit Tests -----" << endl;
 }
 

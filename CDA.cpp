@@ -60,7 +60,8 @@ template <class elmtype> class CDA {
         CDA(int s);                 // Constructor
         CDA(CDA<elmtype>&);         // Copy Constructor    
         ~CDA();                     // Destructor
-        
+
+        void operator()(const CDA<elmtype>& v);             // Copy () Operator
         CDA<elmtype>& operator=(const CDA<elmtype>& v);     // Copy Assignment Operator 
         elmtype& operator[](int i);                         // Overloaded Brackets Operator
 
@@ -77,13 +78,13 @@ template <class elmtype> class CDA {
         void Reverse();             // changes logical direction of array
 
         // Sort, Search, and Select User Functions
-        elmtype Select(int k);        // TO DO:
-        void Sort();                  // TO DO:
-        int Search(elmtype e);        // TO DO:
-        int BinSearch(elmtype e);     // TO DO:
+        elmtype Select(int k);        // QuickSelect function returns kth smallest value
+        void Sort();                  // Sorts array in ascending order (smallest at front)
+        int Search(elmtype e);        // Linear Search for elmtype e
+        int BinSearch(elmtype e);     // Binary Search on ordered array for elmtype e
 
         // Prints CDA as User sees it
-        // void PrintArray();
+        void PrintArray();
 
     private:
         // Private Variables
@@ -145,6 +146,25 @@ template <class elmtype> CDA<elmtype>::CDA(CDA<elmtype>& v): size(v.Length()), c
 // Destructor for CDA Class
 template <class elmtype> CDA<elmtype>::~CDA() { 
     delete[] array;     // Free the memory space
+}
+
+// Copy () Operator
+template <class elmtype> void CDA<elmtype>::operator()(const CDA<elmtype>& v) {
+    // Free up memory
+    delete[] array;
+
+    // Copy variables
+    size = v.size;
+    capacity = v.capacity;
+    ordered = v.ordered;
+    reversed = v.reversed;
+    back = size;
+    front = 0;
+
+    // Copy Array    
+    array = new elmtype[capacity];
+
+    Copy(v);
 }
 
 // Copy Assignment Operator
@@ -669,7 +689,7 @@ template <class elmtype> int CDA<elmtype>::BinSearch(elmtype e) {
  * Return Value:        void
  * Purpose:             Prints the CDA as the user should see it (front to back)
  *******************************************************************************************/
-/*template <class elmtype> void CDA<elmtype>::PrintArray() {
+template <class elmtype> void CDA<elmtype>::PrintArray() {
     cout << "Printing array..." << endl;
 
     // Check if Reversed, then start from back
@@ -687,7 +707,7 @@ template <class elmtype> int CDA<elmtype>::BinSearch(elmtype e) {
     }
 
     cout << endl << "Done Printing." << endl;
-}*/
+}
 
 /******************************************************************************************
  * Function Name:       CapacityCheck
