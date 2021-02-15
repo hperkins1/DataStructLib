@@ -58,7 +58,7 @@ template <class elmtype> class CDA {
     public:
         CDA();                      // Default Constructor
         CDA(int s);                 // Constructor
-        CDA(CDA<elmtype>&);         // Copy Constructor    
+        CDA(const CDA<elmtype>&);   // Copy Constructor    
         ~CDA();                     // Destructor
 
         void operator()(const CDA<elmtype>& v);             // Copy () Operator
@@ -134,13 +134,19 @@ template <class elmtype> CDA<elmtype>::CDA(int s): size(s), capacity(s), ordered
 }
 
 // Copy Constructor
-template <class elmtype> CDA<elmtype>::CDA(CDA<elmtype>& v): size(v.Length()), capacity(v.Capacity()), ordered(v.GetOrdered()), reversed(v.GetReversed()) {
+template <class elmtype> CDA<elmtype>::CDA(const CDA<elmtype>& v) {
+    // Copy Variables
+    size = v.size;
+    capacity = v.capacity;
+    ordered = v.ordered;
+    reversed = v.reversed;
     back = size;
     front = 0;
 
     array = new elmtype[capacity];
 
-    Copy(v);        // Copy elements from CDA v's array to current array
+    // Copy elements from CDA v's array to current array
+    Copy(v);        
 }
 
 // Destructor for CDA Class

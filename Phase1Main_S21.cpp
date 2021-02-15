@@ -2,7 +2,7 @@
 using namespace std;
 #include "CDA.cpp"
 
-void foo(CDA<int> x) {
+void foo(CDA<int>& x) {
     for (int i=0; i< x.Length();i++) cout << x[i] << " ";  cout << endl;
 
 	for (int i=0; i<x.Length()/2; i++)

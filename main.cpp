@@ -2,7 +2,7 @@
 using namespace std;
 #include "CDA.cpp"
 
-void Print(CDA<int> &v) {
+template <class elmtype> void Print(CDA<elmtype> &v) {
     //v.PrintArray();
     for(int i=0; i<v.Length(); i++) {
         cout << v[i] << " ";
@@ -621,16 +621,8 @@ void SelectTests() {
     cout << endl << "----- END OF QuickSelect Tests -----" << endl;
 }
 
-int main() {
-    cout << "----- Beginning Unit Tests -----" << endl << endl;
-
-    ConstructorTests();
-    AddDelTests();
-    BracketTests();
-    LinearSearchTests();
-    BinarySearchTests();
-    SortTests();
-    SelectTests();
+void CDAParameterTests() {
+    cout << endl << "----- 8.0 BEGINNNING OF CDA Parameter Tests -----" << endl;
 
     cout << "Creating CDA B with parameter of 4 [B(4)]..." << endl;
     CDA<int> B(4);
@@ -644,6 +636,49 @@ int main() {
     Print(B);
     cout << "A: " << endl;
     Print(A);
+
+    cout << "AddFront(44) to A.." << endl;
+    A.AddFront(44);
+    cout << "B: " << endl;
+    Print(B);
+    cout << "A: " << endl;
+    Print(A);
+
+    cout << endl << "----- END OF CDA Parameter Tests -----" << endl;
+}
+
+void FloatTests() {
+    cout << endl << "----- 8.0 BEGINNNING OF Float Element Tests -----" << endl;
+
+    // SETUP
+    cout << "SETUP" << endl;
+    cout << "Creating CDA B(10) = { 0 2.2 4.4 6.6 8.8 11.0 13.2 15.4 17.6 19.8}..." << endl;
+    CDA<float> B(10);
+    for(float i=0; i<B.Length(); i++) {
+        B[i] = 2.2*i;
+    }
+    Print(B);
+
+    
+    
+
+    cout << endl << "----- END OF Float Element Tests -----" << endl;
+}
+
+int main() {
+    cout << "----- Beginning Unit Tests -----" << endl << endl;
+
+    ConstructorTests();
+    AddDelTests();
+    BracketTests();
+    LinearSearchTests();
+    BinarySearchTests();
+    SortTests();
+    SelectTests();
+    CDAParameterTests();
+    FloatTests();
+
+    
 
     cout << endl << "----- End of Unit Tests -----" << endl;
 }
