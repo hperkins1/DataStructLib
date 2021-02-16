@@ -107,9 +107,9 @@ template <class elmtype> class CDA {
         void CopyArray(elmtype* array1, const elmtype* array2, int front, int capacity, bool reversed);
 
         // Select Helper Functions
-        int Partition(int left, int right);
+        int Partition(int left, int right, elmtype* temp);
         void Swap(elmtype* array, int index1, int index2);
-        int QuickSelect(int left, int right, int k);
+        int QuickSelect(int left, int right, int k, elmtype* temp);
 
         // Sort Helper Functions
         void Merge(elmtype* array, int left, int middle, int right);
@@ -357,7 +357,9 @@ template <class elmtype> void CDA<elmtype>::Reverse() {
  * Return Value:        elmtype - represents the kth smallest element in the array
  * Purpose:             Performs a Quickselect algorithm to return the kth smallest element 
  *                      in the array. Chooses a random partition element for Quickselect.
- * NOTE:                This function rearranges the values in the array.
+ * NOTE:                Rewrote this function so that it copies array elements int temp array 
+ *                      before quickselect function since quickselect rearranges location 
+ *                      of elements in array
  *******************************************************************************************/
 template <class elmtype> elmtype CDA<elmtype>::Select(int k) { 
     // Check if k is in bounds
@@ -370,13 +372,21 @@ template <class elmtype> elmtype CDA<elmtype>::Select(int k) {
     // NOTE: All ordered arrays are reversed=false due to sort function
     if(GetOrdered()) { return array[(front+k-1)%capacity]; }    
 
+    // Allocate new space for QuickSelect Array
+    elmtype *temp;
+    temp = new elmtype[capacity];
+    CopyArray(temp, array, front, capacity, reversed);
+
     // Create left and right variables to how user sees array
     int left = 0;
     int right = size-1;
 
     // Call QuickSelect function to calculate index
     // Note: Need to call k-1 since kth element is at k-1 index
-    int index = QuickSelect(left, right, k-1);
+    int index = QuickSelect(left, right, k-1, temp);
+
+    // Free up memory
+    delete[] temp;
 
     // Return item from where it is stored in array memory
     return array[(index+front)%capacity];
@@ -386,13 +396,15 @@ template <class elmtype> elmtype CDA<elmtype>::Select(int k) {
  * Function Name:       Partition
  * Input Parameters:    int left - front index of partition set
  *                      int right - last index of partition set
+ *                      elmtype* temp - ptr to temporary array since quickselect rearranges
+ *                      elements in array
  * Return Value:        int - represents a potential index for kth smallest element
  * Purpose:             Creates a random pivotIndex and partitions the array with the 
  *                      values smaller than the pivot to the left of the partitionIndex
  *                      and elements larger than the pivot are stored to the right of the 
  *                      partitionIndex
  *******************************************************************************************/
-template <class elmtype> int CDA<elmtype>::Partition(int left, int right) {
+template <class elmtype> int CDA<elmtype>::Partition(int left, int right, elmtype* temp) {
     // Partition Index starts at front of the array and keeps track of tail of smallest elements
     int partitionIndex = left;
 
@@ -400,22 +412,22 @@ template <class elmtype> int CDA<elmtype>::Partition(int left, int right) {
     int pivotIndex = rand() % (right - left + 1) + left;
 
     // Start Pivot at the random pivotIndex
-    elmtype pivot = array[(pivotIndex+front)%capacity];
+    elmtype pivot = temp[(pivotIndex+front)%capacity];
 
     // Swap the pivot with the element at Right so pivot will be at end of subarray
-    Swap(array, (pivotIndex+front)%capacity, (right+front)%capacity); 
+    Swap(temp, (pivotIndex+front)%capacity, (right+front)%capacity); 
 
     // Starting at left side of subarray, check if each element is less than pivot
     for(int i=left; i<right; i++) {
-        if(array[(front+i)%capacity] <= pivot) {
+        if(temp[(front+i)%capacity] <= pivot) {
             // Move elements less than pivot to left of the array with swap function
-            Swap(array, (front+i)%capacity, (partitionIndex+front)%capacity);
+            Swap(temp, (front+i)%capacity, (partitionIndex+front)%capacity);
             partitionIndex++;
         }
     }
 
     // Swap the pivot back into the subarray at partitionIndex;
-    Swap(array, (partitionIndex+front)%capacity, (right+front)%capacity);
+    Swap(temp, (partitionIndex+front)%capacity, (right+front)%capacity);
 
     // Found PartitionIndex
     return partitionIndex;
@@ -429,13 +441,13 @@ template <class elmtype> int CDA<elmtype>::Partition(int left, int right) {
  * Return Value:        void 
  * Purpose:             Swaps 2 elements with eachother in the array memory
  *******************************************************************************************/
-template <class elmtype> void CDA<elmtype>::Swap(elmtype* array, int index1, int index2) {
+template <class elmtype> void CDA<elmtype>::Swap(elmtype* arr, int index1, int index2) {
     // Declare temp variable to hold old array index 1
-    elmtype temp = array[index1];
+    elmtype tempElm = arr[index1];
 
     // Swap elements
-    array[index1] = array[index2];
-    array[index2] = temp;
+    arr[index1] = arr[index2];
+    arr[index2] = tempElm;
 }
 
 /******************************************************************************************
@@ -443,28 +455,30 @@ template <class elmtype> void CDA<elmtype>::Swap(elmtype* array, int index1, int
  * Input Parameters:    int left - front index to select from
  *                      int right - last index to select from
  *                      int k - the kth smallest element
+ *                      elmtype* temp - ptr to temporary array since Quickselect rearranges
+ *                      array values
  * Return Value:        int - Represents a potential index of kth smallest element of array
  * Purpose:             Performs a Quickselect algorithm to return the kth smallest element 
  *                      in the array. Calls the Partition function to get a potential index
  *                      for kth smallest element
  *******************************************************************************************/
-template <class elmtype> int CDA<elmtype>::QuickSelect(int left, int right, int k) {
+template <class elmtype> int CDA<elmtype>::QuickSelect(int left, int right, int k, elmtype* temp) {
     // only run while array is size 1 and larger
     if (left <= right) {
         // Call PartitionIndex to calculate new partition
-        int partitionIndex = Partition(left, right);
+        int partitionIndex = Partition(left, right, temp);
 
         // If partitionIndex is k then the kth smallest element has been found
         if (k == partitionIndex) { return k; }
 
         // If k is less than partitionIndex then try QuickSelect function again at the left side of array
         if (k < partitionIndex) {
-            return QuickSelect(left, (partitionIndex - 1), k);
+            return QuickSelect(left, (partitionIndex - 1), k, temp);
         }
         
         // If k is greater than partitionIndex, then try QuickSelect function again at right side of array
         else {
-            return QuickSelect((partitionIndex + 1), right, k);
+            return QuickSelect((partitionIndex + 1), right, k, temp);
         }
     }
 
